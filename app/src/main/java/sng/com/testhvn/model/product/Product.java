@@ -10,11 +10,9 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import auto.parcel.AutoParcel;
 import sng.com.testhvn.model.DateCreated;
 import sng.com.testhvn.model.brand.BrandID;
 import sng.com.testhvn.model.user.UserID;
-@AutoParcel
 public class Product implements Parcelable{
 
     @SerializedName("availabilityStatus")
@@ -59,6 +57,29 @@ public class Product implements Parcelable{
     @SerializedName("userID")
     @Expose
     private UserID userID;
+
+    protected Product(Parcel in) {
+        availabilityStatus = in.readString();
+        colour = in.readString();
+        createdAt = in.readString();
+        description = in.readString();
+        objectId = in.readString();
+        productName = in.readString();
+        updatedAt = in.readString();
+        comment = in.readString();
+    }
+
+    public static final Creator<Product> CREATOR = new Creator<Product>() {
+        @Override
+        public Product createFromParcel(Parcel in) {
+            return new Product(in);
+        }
+
+        @Override
+        public Product[] newArray(int size) {
+            return new Product[size];
+        }
+    };
 
     /**
      *
@@ -319,6 +340,13 @@ public class Product implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeString(availabilityStatus);
+        dest.writeString(colour);
+        dest.writeString(createdAt);
+        dest.writeString(description);
+        dest.writeString(objectId);
+        dest.writeString(productName);
+        dest.writeString(updatedAt);
+        dest.writeString(comment);
     }
 }

@@ -13,11 +13,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-import auto.parcel.AutoParcel;
 import sng.com.testhvn.model.Comment;
 import sng.com.testhvn.model.product.Product;
 
-@AutoParcel
 public class ProductResult implements Parcelable {
 
     @SerializedName("results")
