@@ -1,6 +1,6 @@
 package sng.com.testhvn.ui.fragment;
 /**
- * Created by nguye on 3/17/2016.
+ * Created by son.nguyen on 3/17/2016.
  */
 
 import android.net.Uri;
@@ -106,11 +106,6 @@ public class HomeFragment extends BaseFragment {
         onUpdateUI();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
@@ -124,7 +119,7 @@ public class HomeFragment extends BaseFragment {
         getLoaderManager().restartLoader(LOADER_GET_ALL_BRAND, null, mLoadAllBrandCb);
     }
 
-    private LoaderManager.LoaderCallbacks<BrandResult> mLoadAllBrandCb = new LoaderManager.LoaderCallbacks<BrandResult>() {
+    private final LoaderManager.LoaderCallbacks<BrandResult> mLoadAllBrandCb = new LoaderManager.LoaderCallbacks<BrandResult>() {
         @Override
         public Loader<BrandResult> onCreateLoader(int id, Bundle args) {
             return new BrandLoader(getContext());
@@ -149,7 +144,7 @@ public class HomeFragment extends BaseFragment {
         }
     };
 
-    private LoaderManager.LoaderCallbacks<ProductResult> mCbLoadAllProduct = new LoaderManager.LoaderCallbacks<ProductResult>() {
+    private final LoaderManager.LoaderCallbacks<ProductResult> mCbLoadAllProduct = new LoaderManager.LoaderCallbacks<ProductResult>() {
         @Override
         public Loader<ProductResult> onCreateLoader(int id, Bundle args) {
             return new ProductLoader(getContext());
@@ -182,7 +177,7 @@ public class HomeFragment extends BaseFragment {
         }
     };
 
-    private LoaderManager.LoaderCallbacks<CommentResult> mCbLoadAllComment = new LoaderManager.LoaderCallbacks<CommentResult>() {
+    private final LoaderManager.LoaderCallbacks<CommentResult> mCbLoadAllComment = new LoaderManager.LoaderCallbacks<CommentResult>() {
         @Override
         public Loader<CommentResult> onCreateLoader(int id, Bundle args) {
             return new AllReviewLoader(getContext());
