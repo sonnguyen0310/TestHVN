@@ -24,4 +24,5 @@ public class BaseApplication extends android.app.Application {
     public static ServiceFactory getServiceFactoryInstance() {
         return sInstance.mServiceFactory;
     }
+
 }

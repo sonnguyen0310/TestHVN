@@ -1,4 +1,4 @@
-package sng.com.testhvn.model;
+package sng.com.testhvn.model.brand;
 
 /**
  * Created by son.nguyen on 3/19/2016.

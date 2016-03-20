@@ -9,10 +9,8 @@ import sng.com.testhvn.service.impl.DefaultServiceFactory;
  * Created by son.nguyen on 3/19/2016.
  */
 public class BrandLoader extends BaseLoader<BrandResult>{
-    private Context mContext;
     public BrandLoader(Context context) {
         super(context);
-        mContext = context;
     }
 
     @Override

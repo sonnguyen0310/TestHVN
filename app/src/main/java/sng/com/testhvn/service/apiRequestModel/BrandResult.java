@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-import sng.com.testhvn.model.Brand;
+import sng.com.testhvn.model.brand.Brand;
 
 public class BrandResult {
 

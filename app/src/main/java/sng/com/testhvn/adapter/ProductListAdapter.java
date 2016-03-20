@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import sng.com.testhvn.R;
-import sng.com.testhvn.model.Product;
+import sng.com.testhvn.model.product.Product;
 import sng.com.testhvn.ui.fragment.HomeFragment;
 
 /**
@@ -45,7 +45,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductViewHolder> 
     @Override
     public void onBindViewHolder(ProductViewHolder holder, int position) {
         if (holder != null && position < mList.size()) {
-            holder.setData(mList.get(position));
+            holder.setData(mList.get(position),position);
         }
     }
 
@@ -59,6 +59,7 @@ class ProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private TextView mTitle;
     private TextView mPrice;
     private TextView mDescription;
+    private int mPosition;
     private HomeFragment.OnProductListListener onItemClickListener;
 
     public ProductViewHolder(View v, HomeFragment.OnProductListListener onItemClickListener) {
@@ -70,14 +71,17 @@ class ProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         v.setOnClickListener(this);
     }
 
-    public void setData(Product product) {
-        mTitle.setText(product.getProductName() +"");
-        mPrice.setText(product.getPrice()+"");
-        mDescription.setText(product.getDescription()+"");
+    public void setData(Product product, int position) {
+        mPosition = position;
+        mTitle.setText(product.getProductName() + "");
+        mPrice.setText(product.getPrice() + "");
+        mDescription.setText(product.getDescription() + "");
     }
 
     @Override
     public void onClick(View v) {
-        onItemClickListener.onItemClick();
+        if (null != onItemClickListener) {
+            onItemClickListener.onItemClick(mPosition);
+        }
     }
 }

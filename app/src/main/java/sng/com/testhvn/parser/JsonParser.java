@@ -5,7 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import sng.com.testhvn.model.Comment;
-import sng.com.testhvn.model.Product;
+import sng.com.testhvn.model.product.Product;
 import sng.com.testhvn.service.apiRequestModel.ProductResult;
 
 /**

@@ -1,13 +1,21 @@
-package sng.com.testhvn.model;
+package sng.com.testhvn.model.product;
 
 /**
  * Created by son.nguyen on 3/19/2016.
  */
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Product {
+import auto.parcel.AutoParcel;
+import sng.com.testhvn.model.DateCreated;
+import sng.com.testhvn.model.brand.BrandID;
+import sng.com.testhvn.model.user.UserID;
+@AutoParcel
+public class Product implements Parcelable{
 
     @SerializedName("availabilityStatus")
     @Expose
@@ -304,4 +312,13 @@ public class Product {
         this.userID = userID;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+    }
 }

@@ -7,4 +7,5 @@ public interface ServiceFactory {
     ProductService getProductService();
     ReviewService getReviewService();
     BrandService getBrandService();
+    UserService getUserService();
 }

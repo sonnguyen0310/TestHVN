@@ -20,6 +20,8 @@ import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import sng.com.testhvn.R;
 import sng.com.testhvn.service.apiRequestModel.BrandResult;
+import sng.com.testhvn.service.apiRequestModel.CommentResult;
+import sng.com.testhvn.service.apiRequestModel.UserResult;
 
 /**
  * Created by son.nguyen on 3/19/2016.
@@ -108,21 +110,13 @@ public class ApiService implements ApiCall {
         return mApiCall.getAllProduct();
     }
 
-//    @Override
-//    public Response getAllProduct(Callback<Response> cb) {
-//        final Response[] response = new Response[1];
-//        mApiCall.getAllProduct(new Callback<Response>() {
-//            @Override
-//            public void success(Response result, Response response2) {
-//                response[0] = result;
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                error.toString();
-//            }
-//        });
-//        return response[0];
-//    }
+    @Override
+    public CommentResult getAllComment() {
+        return mApiCall.getAllComment();
+    }
 
+    @Override
+    public UserResult getAllUser() {
+        return mApiCall.getAllUser();
+    }
 }

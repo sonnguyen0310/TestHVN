@@ -5,7 +5,6 @@ package sng.com.testhvn.ui.fragment;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.AppCompatSpinner;
@@ -20,44 +19,43 @@ import java.util.ArrayList;
 import sng.com.testhvn.R;
 import sng.com.testhvn.adapter.BrandAdapter;
 import sng.com.testhvn.adapter.ProductListAdapter;
+import sng.com.testhvn.loader.AllReviewLoader;
 import sng.com.testhvn.loader.BrandLoader;
 import sng.com.testhvn.loader.ProductLoader;
-import sng.com.testhvn.model.Brand;
+import sng.com.testhvn.model.Comment;
+import sng.com.testhvn.model.brand.Brand;
+import sng.com.testhvn.model.product.Product;
 import sng.com.testhvn.service.apiRequestModel.BrandResult;
+import sng.com.testhvn.service.apiRequestModel.CommentResult;
 import sng.com.testhvn.service.apiRequestModel.ProductResult;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends BaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
+    public static final String TAG = "HomeFragment";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final int LOADER_GET_ALL_BRAND = 0;
     private static final int LOADER_GET_ALL_PRODUCT = 2;
+    private static final int LOADER_GET_ALL_COMMENT = 3;
+    private static String ARG_PRODUCT_DETAIL = "PRODUCT_DETAIL";
+
     private RecyclerView mRvListProduct;
     private AppCompatSpinner mSpinner;
     private ProductListAdapter mProductListAdapter;
     private BrandAdapter mSpinnerAdapter;
 
+
+    private ProductResult mProductResult;
+    private CommentResult mCommentList;
     private String mParam1;
     private String mParam2;
     private OnProductListListener mOnProductListener;
     private OnFragmentInteractionListener mListener;
 
     public HomeFragment() {
-        // Required empty public constructor
-
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
@@ -74,12 +72,12 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        mCommentList = new CommentResult();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         mRvListProduct = (RecyclerView) view.findViewById(R.id.rc_product_list);
@@ -93,55 +91,22 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onStart() {
         super.onStart();
-
-        mProductListAdapter = new ProductListAdapter(getContext(), mOnProductListener);
         mOnProductListener = new OnProductListListener() {
             @Override
-            public void onItemClick() {
-
+            public void onItemClick(int position) {
+                DetailProductFragment fragment = DetailProductFragment.newInstance(mProductResult.getResults().get(position), getProductComment(mProductResult.getResults().get(position)));
+                getFragmentManager().beginTransaction().addToBackStack(DetailProductFragment.TAG).replace(R.id.fragment_container, fragment).commit();
             }
         };
+        mProductListAdapter = new ProductListAdapter(getContext(), mOnProductListener);
 
         onUpdateUI();
     }
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
@@ -191,9 +156,20 @@ public class HomeFragment extends Fragment {
             if (null == data || !(data.getResults().size() > 0)) {
                 return;
             }
+            mProductResult = data;
             mProductListAdapter.setData((ArrayList) data.getResults());
+            mCommentList.getResults().addAll(data.getComment());
             mRvListProduct.setAdapter(mProductListAdapter);
-
+//            if (getActivity() instanceof HomeActivity) {
+//                if (null == ((HomeActivity) getActivity()).getmCommentResult().getResults() || ((HomeActivity) getActivity()).getmCommentResult().getResults().size() == 0) {
+//                    getLoaderManager().restartLoader(LOADER_GET_ALL_COMMENT, null, mCbLoadAllComment);
+//                } else {
+//                    mCommentList.getResults().addAll(((HomeActivity) getActivity()).getmCommentResult().getResults());
+//                }
+//            } else {
+//
+//            }
+            getLoaderManager().restartLoader(LOADER_GET_ALL_COMMENT, null, mCbLoadAllComment);
         }
 
         @Override
@@ -202,7 +178,38 @@ public class HomeFragment extends Fragment {
         }
     };
 
+    private LoaderManager.LoaderCallbacks<CommentResult> mCbLoadAllComment = new LoaderManager.LoaderCallbacks<CommentResult>() {
+        @Override
+        public Loader<CommentResult> onCreateLoader(int id, Bundle args) {
+            return new AllReviewLoader(getContext());
+        }
+
+        @Override
+        public void onLoadFinished(Loader<CommentResult> loader, CommentResult data) {
+            mCommentList.getResults().addAll(data.getResults());
+        }
+
+        @Override
+        public void onLoaderReset(Loader<CommentResult> loader) {
+
+        }
+    };
+
     public interface OnProductListListener {
-        void onItemClick();
+        void onItemClick(int position);
+    }
+
+    private ArrayList<Comment> getProductComment(Product product) {
+        ArrayList<Comment> listComment = new ArrayList<>();
+        for (Comment comment : mCommentList.getResults()) {
+            try{
+                if (product.getObjectId().equals(comment.getProductID().getObjectId())) {
+                    listComment.add(comment);
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return listComment;
     }
 }

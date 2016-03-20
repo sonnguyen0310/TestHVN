@@ -1,7 +1,7 @@
 package sng.com.testhvn.ui.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
 /**
  * Created by nguye on 3/17/2016.

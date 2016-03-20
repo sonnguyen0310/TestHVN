@@ -1,4 +1,4 @@
-package sng.com.testhvn.model;
+package sng.com.testhvn.model.product;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by son.nguyen on 3/20/2016.
  */
-public class UserID {
+public class ProductID {
 
     @SerializedName("__type")
     @Expose
@@ -19,42 +19,54 @@ public class UserID {
     private String objectId;
 
     /**
-     * @return The Type
+     *
+     * @return
+     * The Type
      */
     public String getType() {
         return Type;
     }
 
     /**
-     * @param Type The __type
+     *
+     * @param Type
+     * The __type
      */
     public void setType(String Type) {
         this.Type = Type;
     }
 
     /**
-     * @return The className
+     *
+     * @return
+     * The className
      */
     public String getClassName() {
         return className;
     }
 
     /**
-     * @param className The className
+     *
+     * @param className
+     * The className
      */
     public void setClassName(String className) {
         this.className = className;
     }
 
     /**
-     * @return The objectId
+     *
+     * @return
+     * The objectId
      */
     public String getObjectId() {
         return objectId;
     }
 
     /**
-     * @param objectId The objectId
+     *
+     * @param objectId
+     * The objectId
      */
     public void setObjectId(String objectId) {
         this.objectId = objectId;

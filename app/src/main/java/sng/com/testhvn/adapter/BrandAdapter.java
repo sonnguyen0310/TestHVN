@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import sng.com.testhvn.R;
-import sng.com.testhvn.model.Brand;
+import sng.com.testhvn.model.brand.Brand;
 
 /**
  * Created by son.nguyen on 3/19/2016.
