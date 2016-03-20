@@ -4,13 +4,8 @@ import android.content.Context;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.squareup.okhttp.OkHttpClient;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.security.cert.CertificateException;
 
 import javax.net.ssl.HostnameVerifier;
@@ -20,9 +15,7 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import retrofit.Callback;
 import retrofit.RestAdapter;
-import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import sng.com.testhvn.R;
@@ -111,35 +104,25 @@ public class ApiService implements ApiCall {
     }
 
     @Override
-    public JsonObject getAllProduct(Callback<Response> cb) {
-        final JsonObject[] objReturn = new JsonObject[1];
-        mApiCall.getAllProduct(new Callback<Response>() {
-            @Override
-            public void success(Response result, Response response2) {
-                //Try to get response body
-                BufferedReader reader = null;
-                StringBuilder sb = new StringBuilder();
-                try {
-                    reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
-                    String line;
-                    try {
-                        while ((line = reader.readLine()) != null) {
-                            sb.append(line);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                objReturn[0] = (new JsonParser()).parse(sb.toString()).getAsJsonObject();
-            }
-            @Override
-            public void failure(RetrofitError error) {
-                error.toString();
-            }
-        });
-        return objReturn[0];
+    public Response getAllProduct() {
+        return mApiCall.getAllProduct();
     }
+
+//    @Override
+//    public Response getAllProduct(Callback<Response> cb) {
+//        final Response[] response = new Response[1];
+//        mApiCall.getAllProduct(new Callback<Response>() {
+//            @Override
+//            public void success(Response result, Response response2) {
+//                response[0] = result;
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                error.toString();
+//            }
+//        });
+//        return response[0];
+//    }
 
 }

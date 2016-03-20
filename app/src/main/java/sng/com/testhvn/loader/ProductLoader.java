@@ -2,6 +2,7 @@ package sng.com.testhvn.loader;
 
 import android.content.Context;
 
+import sng.com.testhvn.parser.JsonParser;
 import sng.com.testhvn.service.apiRequestModel.ProductResult;
 import sng.com.testhvn.service.impl.DefaultServiceFactory;
 
@@ -16,7 +17,7 @@ public class ProductLoader extends BaseLoader<ProductResult> {
 
     @Override
     protected ProductResult doLoadInBackground() throws Exception {
-        DefaultServiceFactory.getsInstance(getContext()).getProductService().getAllProduct(getContext());
-        return null;
+        return JsonParser.parserProductResult(DefaultServiceFactory.getsInstance(getContext()).getProductService().getAllProduct(getContext()));
     }
 }
+

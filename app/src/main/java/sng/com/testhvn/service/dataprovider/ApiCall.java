@@ -1,8 +1,5 @@
 package sng.com.testhvn.service.dataprovider;
 
-import com.google.gson.JsonObject;
-
-import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.GET;
 import retrofit.http.Headers;
@@ -24,5 +21,5 @@ public interface ApiCall {
             "X-Parse-Application-Id: MlR6vYpYvLRxfibxE5cg0e73jXojL6jWFqXU6F8L",
             "X-Parse-REST-API-Key: 7BTXVX1qUXKUCnsngL8LxhpEHKQ8KKd798kKpD9W"
     })
-    JsonObject getAllProduct(Callback<Response> cb);
+    Response getAllProduct();
 }
