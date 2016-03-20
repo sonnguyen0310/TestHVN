@@ -103,8 +103,12 @@ public class HomeFragment extends BaseFragment {
             }
         };
         mProductListAdapter = new ProductListAdapter(getContext(), mOnProductListener);
-
         onUpdateUI();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     public interface OnFragmentInteractionListener {
@@ -202,11 +206,11 @@ public class HomeFragment extends BaseFragment {
     private ArrayList<Comment> getProductComment(Product product) {
         ArrayList<Comment> listComment = new ArrayList<>();
         for (Comment comment : mCommentList.getResults()) {
-            try{
+            try {
                 if (product.getObjectId().equals(comment.getProductID().getObjectId())) {
                     listComment.add(comment);
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
