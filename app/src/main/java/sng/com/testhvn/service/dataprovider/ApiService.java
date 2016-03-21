@@ -18,9 +18,11 @@ import javax.net.ssl.X509TrustManager;
 import retrofit.RestAdapter;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
+import retrofit.http.Body;
 import sng.com.testhvn.R;
 import sng.com.testhvn.service.apiRequestModel.BrandResult;
 import sng.com.testhvn.service.apiRequestModel.CommentResult;
+import sng.com.testhvn.service.apiRequestModel.PostReview;
 import sng.com.testhvn.service.apiRequestModel.UserResult;
 
 /**
@@ -113,6 +115,11 @@ public class ApiService implements ApiCall {
     @Override
     public CommentResult getAllComment() {
         return mApiCall.getAllComment();
+    }
+
+    @Override
+    public Response submitReview(@Body PostReview postReview) {
+        return mApiCall.submitReview(postReview);
     }
 
     @Override

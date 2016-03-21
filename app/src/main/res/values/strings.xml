@@ -5,4 +5,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="product.status">Stock: </string>
     <string name="product.color">Color: </string>
+    <string name="comment.email_hint">Your Email</string>
+    <string name="comment.rating_hint">Your rating</string>
+    <string name="comment.comment_hint">Write your comment here</string>
+    <string name="comment.button_submit">Submit</string>
+    <string name="comment.no_product_found">Wrong product ID, please try again</string>
+    <string name="comment_missing_field">Please fill fully information</string>
 </resources>
