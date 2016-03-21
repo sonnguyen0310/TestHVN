@@ -140,7 +140,6 @@ public class HomeFragment extends BaseLoadingFragment {
         });
         onUpdateUI();
     }
-
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

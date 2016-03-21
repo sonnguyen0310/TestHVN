@@ -22,6 +22,9 @@ public class HomeActivity extends BaseActivity {
         Fragment fragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().addToBackStack(HomeFragment.TAG).add(R.id.fragment_container, fragment).commit();
         onDefaultFabClick();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        onBackPressed();
     }
 
     public void onDefaultFabClick() {
@@ -33,4 +36,5 @@ public class HomeActivity extends BaseActivity {
             }
         });
     }
+
 }

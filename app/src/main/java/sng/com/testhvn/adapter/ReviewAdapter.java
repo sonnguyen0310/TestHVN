@@ -44,7 +44,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewHolder> {
 
     @Override
     public void onBindViewHolder(ReviewHolder holder, int position) {
-        if (position < mCommentList.size() && null != mCommentList.get(position) && null != mCommentList.get(position).getUserID()) {
+        if (position < 10 && null != mCommentList.get(position) && null != mCommentList.get(position).getUserID()) {
             try {
                 holder.setData(getUserInfo(mCommentList.get(position).getUserID().getObjectId()), mCommentList.get(position));
             } catch (Exception e) {
@@ -55,7 +55,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewHolder> {
 
     @Override
     public int getItemCount() {
-        return (null == mCommentList ? 0 : mCommentList.size());
+        return 10;
+//        return (null == mCommentList ? 0 : mCommentList.size());
     }
 
     public User getUserInfo(String userID) {
