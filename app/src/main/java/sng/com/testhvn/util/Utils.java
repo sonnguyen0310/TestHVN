@@ -1,5 +1,8 @@
 package sng.com.testhvn.util;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -11,6 +14,8 @@ import retrofit.client.Response;
 
 
 public class Utils {
+    private static final String PREFERENCE = "Main_preference";
+
     public static JsonObject toJson(Response result) {
         BufferedReader reader = null;
         StringBuilder sb = new StringBuilder();
@@ -29,5 +34,19 @@ public class Utils {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static void savePreference(Context context, String key, String value) {
+        SharedPreferences sharedpreferences = context.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(key, value);
+        editor.commit();
+    }
+
+    public static String readPreference(Context context, String key) {
+        SharedPreferences preferences;
+        preferences = context.getSharedPreferences("PREF_NAME", Context.MODE_PRIVATE);
+        String result = preferences.getString(key, "");
+        return result;
     }
 }

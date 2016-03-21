@@ -49,7 +49,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     private static final String ARG_LIST_USER = "param2";
     private static final String ARG_POST_REVIEW = "arg_post_review";
     private static final String ARG_PRODUCT = "arg_product";
-
+    private static final String PREF_USER_EMAIL = "user_mail";
     private static final int LOADER_GET_ALL_USER = 0;
     private static final int LOADER_GET_ALL_PRODUCT = 1;
     private static final int LOADER_POST_COMMENT = 2;
@@ -121,6 +121,12 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
 
         mEdtComment = (EditText) view.findViewById(R.id.edt_comment);
         mEdtEmail = (EditText) view.findViewById(R.id.edt_email);
+        try {
+            mEdtEmail.setText(Utils.readPreference(getContext(), PREF_USER_EMAIL));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         mEdtProductId = (AutoCompleteTextView) view.findViewById(R.id.edt_product_id);
         mEdtRating = (EditText) view.findViewById(R.id.edt_rating);
         mTvProductName = (TextView) view.findViewById(R.id.tv_product_name);
@@ -128,7 +134,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         if (getActivity() instanceof HomeActivity) {
             ((HomeActivity) getActivity()).btnAddReview.setVisibility(View.GONE);
         }
-        if (getActivity() instanceof HomeActivity){
+        if (getActivity() instanceof HomeActivity) {
             ((HomeActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.comment_page));
         }
         return view;
@@ -202,7 +208,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     @Override
     public void onDetach() {
         super.onDetach();
-        if (getActivity() instanceof HomeActivity){
+        if (getActivity() instanceof HomeActivity) {
             ((HomeActivity) getActivity()).btnAddReview.setVisibility(View.VISIBLE);
         }
     }
@@ -295,6 +301,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         postReview.setUserID(userId);
         Bundle bundle = new Bundle();
         bundle.putParcelable(ARG_POST_REVIEW, postReview);
+        Utils.savePreference(getContext(), PREF_USER_EMAIL, mEdtEmail.getText().toString());
         getLoaderManager().restartLoader(LOADER_POST_COMMENT, bundle, mPostReviewLoaderCallBack);
     }
 
