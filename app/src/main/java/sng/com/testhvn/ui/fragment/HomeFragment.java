@@ -80,6 +80,7 @@ public class HomeFragment extends BaseLoadingFragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        showLoading();
         mCommentList = new CommentResult();
     }
 
@@ -107,6 +108,14 @@ public class HomeFragment extends BaseLoadingFragment {
 //        return null;
 //    }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity() instanceof HomeActivity) {
+            ((HomeActivity) getActivity()).btnAddReview.setVisibility(View.VISIBLE);
+        }
+    }
 
     @Override
     public void onStart() {
@@ -140,6 +149,7 @@ public class HomeFragment extends BaseLoadingFragment {
         });
         onUpdateUI();
     }
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
@@ -166,7 +176,7 @@ public class HomeFragment extends BaseLoadingFragment {
             }
 
             mBrandList = (ArrayList) data.getResults();
-            mBrandList.add(0,new Brand("", "all brand", getString(R.string.product_all_product), "123456", ""));
+            mBrandList.add(0, new Brand("", "all brand", getString(R.string.product_all_product), "123456", ""));
             if (null != mBrandList && mBrandList.size() > 0) {
                 mSpinnerAdapter.setData(mBrandList);
             }
@@ -181,6 +191,7 @@ public class HomeFragment extends BaseLoadingFragment {
     private final LoaderManager.LoaderCallbacks<ProductResult> mCbLoadAllProduct = new LoaderManager.LoaderCallbacks<ProductResult>() {
         @Override
         public Loader<ProductResult> onCreateLoader(int id, Bundle args) {
+            showLoading();
             return new ProductLoader(getContext());
         }
 
@@ -193,6 +204,7 @@ public class HomeFragment extends BaseLoadingFragment {
             mProductListAdapter.setData((ArrayList) data.getResults());
             mCommentList.getResults().addAll(data.getComment());
             mRvListProduct.setAdapter(mProductListAdapter);
+            showContent();
         }
 
         @Override
@@ -204,6 +216,7 @@ public class HomeFragment extends BaseLoadingFragment {
     private final LoaderManager.LoaderCallbacks<CommentResult> mCbLoadAllComment = new LoaderManager.LoaderCallbacks<CommentResult>() {
         @Override
         public Loader<CommentResult> onCreateLoader(int id, Bundle args) {
+            showLoading();
             return new AllReviewLoader(getContext());
         }
 
@@ -222,7 +235,7 @@ public class HomeFragment extends BaseLoadingFragment {
     private final LoaderManager.LoaderCallbacks<ProductResult> mCbLoadProducByBrand = new LoaderManager.LoaderCallbacks<ProductResult>() {
         @Override
         public Loader<ProductResult> onCreateLoader(int id, Bundle args) {
-
+            showLoading();
             return new ProductByBrandLoader(getContext(), args.getString(BRAND_ID));
         }
 
@@ -238,6 +251,7 @@ public class HomeFragment extends BaseLoadingFragment {
                 mProductListAdapter.setData((ArrayList) data.getResults());
                 mRvListProduct.setAdapter(mProductListAdapter);
             }
+            showContent();
         }
 
         @Override

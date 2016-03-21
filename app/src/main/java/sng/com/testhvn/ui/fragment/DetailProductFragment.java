@@ -17,10 +17,12 @@ import java.util.ArrayList;
 
 import sng.com.testhvn.R;
 import sng.com.testhvn.adapter.ReviewAdapter;
+import sng.com.testhvn.loader.AllReviewLoader;
 import sng.com.testhvn.loader.UserLoader;
 import sng.com.testhvn.model.Comment;
 import sng.com.testhvn.model.product.Product;
 import sng.com.testhvn.model.user.User;
+import sng.com.testhvn.service.apiRequestModel.CommentResult;
 import sng.com.testhvn.service.apiRequestModel.UserResult;
 import sng.com.testhvn.ui.activity.HomeActivity;
 
@@ -36,6 +38,7 @@ public class DetailProductFragment extends BaseLoadingFragment {
     private static String ARG_PRODUCT_COMMENT = "PRODUCT_COMMENT";
     private static String ARG_PRODUCT_LIST = "PRODUCT_LIST";
     private static String ARG_COMMENT = "COMMENT";
+    private static final int LOADER_GET_ALL_COMMENT = 3;
     public static final String TAG = "DetailProductFragment";
     private static final int LOADER_GET_ALL_USER = 0;
     // TODO: Rename and change types of parameters
@@ -79,9 +82,14 @@ public class DetailProductFragment extends BaseLoadingFragment {
         if (getArguments() != null) {
             mProductResult = getArguments().getParcelable(ARG_PRODUCT_DETAIL);
             mListComment = getArguments().getParcelableArrayList(ARG_PRODUCT_COMMENT);
+            if (mListComment == null) {
+                mListComment = new ArrayList<>();
+                getLoaderManager().restartLoader(LOADER_GET_ALL_COMMENT, null, mCbLoadAllComment);
+            }
             mListProduct = getArguments().getParcelableArrayList(ARG_PRODUCT_LIST);
         }
         mReviewAdapter = new ReviewAdapter(getContext());
+        showContent();
     }
 
     @Override
@@ -97,7 +105,7 @@ public class DetailProductFragment extends BaseLoadingFragment {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        if (getActivity() instanceof HomeActivity){
+        if (getActivity() instanceof HomeActivity) {
             ((HomeActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.product_detail));
         }
         return view;
@@ -117,6 +125,7 @@ public class DetailProductFragment extends BaseLoadingFragment {
             return;
         }
         if (getActivity() instanceof HomeActivity) {
+            ((HomeActivity) getActivity()).btnAddReview.setVisibility(View.VISIBLE);
             ((HomeActivity) getActivity()).btnAddReview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -167,4 +176,25 @@ public class DetailProductFragment extends BaseLoadingFragment {
             ((HomeActivity) getActivity()).onDefaultFabClick();
         }
     }
+
+    private final LoaderManager.LoaderCallbacks<CommentResult> mCbLoadAllComment = new LoaderManager.LoaderCallbacks<CommentResult>() {
+        @Override
+        public Loader<CommentResult> onCreateLoader(int id, Bundle args) {
+            return new AllReviewLoader(getContext());
+        }
+
+        @Override
+        public void onLoadFinished(Loader<CommentResult> loader, CommentResult data) {
+            mListComment.clear();
+            mListComment.addAll(data.getResults());
+            mReviewAdapter.setData(mListComment, mListUser);
+            mRecyclerView.setAdapter(mReviewAdapter);
+            showContent();
+        }
+
+        @Override
+        public void onLoaderReset(Loader<CommentResult> loader) {
+
+        }
+    };
 }

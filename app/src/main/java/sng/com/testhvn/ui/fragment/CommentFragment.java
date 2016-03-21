@@ -3,7 +3,10 @@ package sng.com.testhvn.ui.fragment;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.speech.RecognizerIntent;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.text.Editable;
@@ -53,7 +56,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     private static final int LOADER_GET_ALL_USER = 0;
     private static final int LOADER_GET_ALL_PRODUCT = 1;
     private static final int LOADER_POST_COMMENT = 2;
-
+    private static final int SUCCESS = 1;
     private static final int ACTIVITY_RESULT_VOICE_CODE = 100;
     private static final int ACTIVITY_RESULT_QR_CODE = 101;
 
@@ -121,15 +124,12 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
 
         mEdtComment = (EditText) view.findViewById(R.id.edt_comment);
         mEdtEmail = (EditText) view.findViewById(R.id.edt_email);
-        try {
-            mEdtEmail.setText(Utils.readPreference(getContext(), PREF_USER_EMAIL));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
 
         mEdtProductId = (AutoCompleteTextView) view.findViewById(R.id.edt_product_id);
         mEdtRating = (EditText) view.findViewById(R.id.edt_rating);
         mTvProductName = (TextView) view.findViewById(R.id.tv_product_name);
+        mTvProductName.setOnClickListener(this);
         setDisableView();
         if (getActivity() instanceof HomeActivity) {
             ((HomeActivity) getActivity()).btnAddReview.setVisibility(View.GONE);
@@ -195,6 +195,12 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
 //                }
 //            });
 //        }
+        showContent();
+        try {
+            mEdtEmail.setText(Utils.readPreference(getContext(), PREF_USER_EMAIL));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (null == mListProduct && null == mListUser) {
             getLoaderManager().restartLoader(LOADER_GET_ALL_PRODUCT, null, mCbLoadAllProduct);
         } else {
@@ -331,8 +337,16 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
                 promptSpeechInput();
                 break;
             case R.id.btn_qr_scan:
-                Intent intent = new Intent(getActivity(), QrScanActivity.class);
-                startActivityForResult(intent, ACTIVITY_RESULT_QR_CODE);
+                try {
+                    Intent intent = new Intent(getActivity(), QrScanActivity.class);
+                    startActivityForResult(intent, ACTIVITY_RESULT_QR_CODE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case R.id.tv_product_name:
+                DetailProductFragment fragment = DetailProductFragment.newInstance(mListProduct, mProduct, null);
+                getFragmentManager().beginTransaction().addToBackStack(DetailProductFragment.TAG).replace(R.id.fragment_container, fragment).commit();
                 break;
         }
     }
@@ -397,7 +411,6 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         @Override
         public void onLoadFinished(Loader<UserResult> loader, UserResult data) {
             mListUser = (ArrayList) data.getResults();
-
             showContent();
         }
 
@@ -431,16 +444,19 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     private final LoaderManager.LoaderCallbacks<Response> mPostReviewLoaderCallBack = new LoaderManager.LoaderCallbacks<Response>() {
         @Override
         public Loader<Response> onCreateLoader(int id, Bundle args) {
+            showLoading();
             return new PostCommentLoader(getContext(), (PostReview) args.getParcelable(ARG_POST_REVIEW));
         }
 
         @Override
         public void onLoadFinished(Loader<Response> loader, Response data) {
             if (Utils.toJson(data).toString().contains("createdAt") && Utils.toJson(data).toString().contains("createdAt")) {
-
+                Toast.makeText(getContext(), getString(R.string.comment_success), Toast.LENGTH_LONG);
+                mHandler.sendEmptyMessage(SUCCESS);
             } else {
                 Toast.makeText(getContext(), getString(R.string.comment_error_post), Toast.LENGTH_LONG);
             }
+            showContent();
         }
 
         @Override
@@ -448,4 +464,15 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
 
         }
     };
+
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == SUCCESS) {
+                Fragment fragment = new HomeFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+            }
+        }
+    };
+
 }

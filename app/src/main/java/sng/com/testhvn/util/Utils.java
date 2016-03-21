@@ -45,7 +45,7 @@ public class Utils {
 
     public static String readPreference(Context context, String key) {
         SharedPreferences preferences;
-        preferences = context.getSharedPreferences("PREF_NAME", Context.MODE_PRIVATE);
+        preferences = context.getSharedPreferences(key, Context.MODE_PRIVATE);
         String result = preferences.getString(key, "");
         return result;
     }

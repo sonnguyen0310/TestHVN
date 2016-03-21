@@ -1,5 +1,6 @@
 package sng.com.testhvn.ui.fragment;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -14,10 +15,15 @@ import sng.com.testhvn.R;
 public abstract class BaseLoadingFragment extends BaseFragment {
     View mLoading;
     ViewGroup mContent;
+    ProgressDialog progress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        progress = ProgressDialog.show(getContext(), "Loading",
+                "Please wait", true);
+        progress.setCanceledOnTouchOutside(false);
+        progress.setCancelable(true);
     }
 
     @Nullable
@@ -34,19 +40,21 @@ public abstract class BaseLoadingFragment extends BaseFragment {
     protected abstract View onCreateContentView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
 
     public void showLoading() {
-        if (isViewNull()) {
-            return;
-        }
-        mLoading.setVisibility(View.VISIBLE);
-        mContent.setVisibility(View.GONE);
+//        if (isViewNull()) {
+//            return;
+//        }
+//        mLoading.setVisibility(View.VISIBLE);
+//        mContent.setVisibility(View.GONE);
+        progress.show();
     }
 
     public void showContent() {
-        if (isViewNull()) {
-            return;
-        }
-        mContent.setVisibility(View.VISIBLE);
-        mLoading.setVisibility(View.GONE);
+//        if (isViewNull()) {
+//            return;
+//        }
+//        mContent.setVisibility(View.VISIBLE);
+//        mLoading.setVisibility(View.GONE);
+        progress.dismiss();
     }
 
 

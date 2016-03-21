@@ -20,18 +20,15 @@ public class HomeActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         btnAddReview = (View) findViewById(R.id.fabAddReview);
         Fragment fragment = new HomeFragment();
-        getSupportFragmentManager().beginTransaction().addToBackStack(HomeFragment.TAG).add(R.id.fragment_container, fragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment).commit();
         onDefaultFabClick();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        onBackPressed();
     }
 
     public void onDefaultFabClick() {
         btnAddReview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommentFragment fragment = CommentFragment.newInstance(null, null , null);
+                CommentFragment fragment = CommentFragment.newInstance(null, null, null);
                 getSupportFragmentManager().beginTransaction().addToBackStack(CommentFragment.TAG).replace(R.id.fragment_container, fragment).commit();
             }
         });

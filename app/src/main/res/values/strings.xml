@@ -21,4 +21,5 @@
     <string name="comment_page">Comment</string>
     <string name="product_detail">Product Detail</string>
     <string name="product_all_product">All Product</string>
+    <string name="comment_success">Comment Success</string>
 </resources>
