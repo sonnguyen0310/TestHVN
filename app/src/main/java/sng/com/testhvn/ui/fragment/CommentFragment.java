@@ -40,6 +40,7 @@ import sng.com.testhvn.service.apiRequestModel.PostReview;
 import sng.com.testhvn.service.apiRequestModel.ProductResult;
 import sng.com.testhvn.service.apiRequestModel.UserResult;
 import sng.com.testhvn.ui.activity.HomeActivity;
+import sng.com.testhvn.ui.activity.QrScanActivity;
 import sng.com.testhvn.util.Utils;
 
 public class CommentFragment extends BaseLoadingFragment implements View.OnClickListener {
@@ -47,6 +48,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     private static final String ARG_LIST_PRODUCT = "param1";
     private static final String ARG_LIST_USER = "param2";
     private static final String ARG_POST_REVIEW = "arg_post_review";
+    private static final String ARG_PRODUCT = "arg_product";
 
     private static final int LOADER_GET_ALL_USER = 0;
     private static final int LOADER_GET_ALL_PRODUCT = 1;
@@ -76,11 +78,12 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     private ArrayAdapter<String> mProductAutoAdapter;
     private FabListener mFabListener;
 
-    public static CommentFragment newInstance(ArrayList<Product> listProduct, ArrayList<User> listUser) {
+    public static CommentFragment newInstance(ArrayList<Product> listProduct, ArrayList<User> listUser, Product product) {
         CommentFragment fragment = new CommentFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(ARG_LIST_PRODUCT, listProduct);
         args.putParcelableArrayList(ARG_LIST_USER, listUser);
+        args.putParcelable(ARG_PRODUCT, product);
         fragment.setArguments(args);
         return fragment;
     }
@@ -99,9 +102,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         if (getArguments() != null) {
             mListProduct = getArguments().getParcelableArrayList(ARG_LIST_PRODUCT);
             mListUser = getArguments().getParcelableArrayList(ARG_LIST_USER);
-        }
-        if (null == mListProduct && null == mListUser) {
-            getLoaderManager().restartLoader(LOADER_GET_ALL_PRODUCT, null, mCbLoadAllProduct);
+            mProduct = getArguments().getParcelable(ARG_PRODUCT);
         }
     }
 
@@ -124,19 +125,25 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         mEdtRating = (EditText) view.findViewById(R.id.edt_rating);
         mTvProductName = (TextView) view.findViewById(R.id.tv_product_name);
         setDisableView();
+        if (getActivity() instanceof HomeActivity) {
+            ((HomeActivity) getActivity()).btnAddReview.setVisibility(View.GONE);
+        }
+        if (getActivity() instanceof HomeActivity){
+            ((HomeActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.comment_page));
+        }
         return view;
     }
 
-//    @Override
-//    protected View onCreateContentView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        return null;
-//    }
 
     @Override
     public void onStart() {
         super.onStart();
         if (mListProduct != null) {
             setAutoCompleteAdapter();
+        }
+        if (mProduct != null) {
+            mEdtProductId.setText(mProduct.getObjectId());
+            mTvProductName.setText(mProduct.getProductName());
         }
         mEdtProductId.addTextChangedListener(new TextWatcher() {
             private Timer timer = new Timer();
@@ -171,16 +178,32 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     @Override
     public void onResume() {
         super.onResume();
-        if (!getUserVisibleHint()) {
-            return;
+//        if (!getUserVisibleHint()) {
+//            return;
+//        }
+//        if (getActivity() instanceof HomeActivity) {
+//            ((HomeActivity) getActivity()).btnAddReview.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                }
+//            });
+//        }
+        if (null == mListProduct && null == mListUser) {
+            getLoaderManager().restartLoader(LOADER_GET_ALL_PRODUCT, null, mCbLoadAllProduct);
+        } else {
+            setAutoCompleteAdapter();
+            if (mListUser == null) {
+                getLoaderManager().restartLoader(LOADER_GET_ALL_USER, null, mUserResultLoaderCallbacks);
+            }
         }
-        if (getActivity() instanceof HomeActivity) {
-            ((HomeActivity) getActivity()).btnAddReview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+    }
 
-                }
-            });
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (getActivity() instanceof HomeActivity){
+            ((HomeActivity) getActivity()).btnAddReview.setVisibility(View.VISIBLE);
         }
     }
 
@@ -301,6 +324,8 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
                 promptSpeechInput();
                 break;
             case R.id.btn_qr_scan:
+                Intent intent = new Intent(getActivity(), QrScanActivity.class);
+                startActivityForResult(intent, ACTIVITY_RESULT_QR_CODE);
                 break;
         }
     }
@@ -308,7 +333,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("sonnguyen", "onActivityResult: " +resultCode + " / " + getActivity().RESULT_OK + " / " + requestCode);
+        Log.d("sonnguyen", "onActivityResult: resultCode: " + resultCode + " / " + getActivity().RESULT_OK + " / " + requestCode);
         switch (requestCode) {
             case ACTIVITY_RESULT_VOICE_CODE:
                 if (resultCode == getActivity().RESULT_OK && null != data) {
@@ -319,6 +344,14 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
                 }
                 break;
             case ACTIVITY_RESULT_QR_CODE:
+                if (resultCode == getActivity().RESULT_OK && null != data) {
+                    if (!TextUtils.isEmpty(data.getStringExtra(QrScanActivity.QR_CODE_RESULT_FAIL))) {
+                        Toast.makeText(getContext(), getString(R.string.qrcode_camera_not_found), Toast.LENGTH_LONG).show();
+                        break;
+                    } else {
+                        mEdtProductId.setText(data.getStringExtra(QrScanActivity.QR_CODE_RESULT_SUCCESS));
+                    }
+                }
                 break;
         }
     }

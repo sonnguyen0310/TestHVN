@@ -4,9 +4,12 @@ import android.content.Context;
 
 import com.google.gson.JsonObject;
 
+import sng.com.testhvn.service.apiRequestModel.ProductResult;
+
 /**
  * Created by son.nguyen on 3/18/2016.
  */
 public interface ProductService {
    JsonObject getAllProduct(Context context);
+   ProductResult getProductByBrand(Context context,String brandID);
 }

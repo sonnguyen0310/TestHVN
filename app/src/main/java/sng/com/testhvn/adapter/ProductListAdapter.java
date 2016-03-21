@@ -20,8 +20,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductViewHolder> 
     private HomeFragment.OnProductListListener listListener;
     private ArrayList<Product> mList;
 
-    public ProductListAdapter(Context context, HomeFragment.OnProductListListener listener) {
-        setOnItemClickListener(listener);
+    public ProductListAdapter(Context context) {
     }
 
     @Override
@@ -39,7 +38,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductViewHolder> 
         notifyDataSetChanged();
     }
 
-    private void setOnItemClickListener(HomeFragment.OnProductListListener onItemClickListener) {
+    public void setOnItemClickListener(HomeFragment.OnProductListListener onItemClickListener) {
         listListener = onItemClickListener;
     }
 

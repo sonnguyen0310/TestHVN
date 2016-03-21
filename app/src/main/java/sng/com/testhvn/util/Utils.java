@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 
 import retrofit.client.Response;
 
+
 public class Utils {
     public static JsonObject toJson(Response result) {
         BufferedReader reader = null;

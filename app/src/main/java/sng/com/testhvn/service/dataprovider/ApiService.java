@@ -19,10 +19,12 @@ import retrofit.RestAdapter;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import retrofit.http.Body;
+import retrofit.http.Query;
 import sng.com.testhvn.R;
 import sng.com.testhvn.service.apiRequestModel.BrandResult;
 import sng.com.testhvn.service.apiRequestModel.CommentResult;
 import sng.com.testhvn.service.apiRequestModel.PostReview;
+import sng.com.testhvn.service.apiRequestModel.ProductResult;
 import sng.com.testhvn.service.apiRequestModel.UserResult;
 
 /**
@@ -111,6 +113,13 @@ public class ApiService implements ApiCall {
     public Response getAllProduct() {
         return mApiCall.getAllProduct();
     }
+
+    @Override
+    public ProductResult getProductByBrand(@Query("where") String where, @Query("order") String order, @Query("limit") String limit) {
+        return mApiCall.getProductByBrand(where,"dateCreated", "10");
+    }
+
+
 
     @Override
     public CommentResult getAllComment() {

@@ -4,7 +4,9 @@ import android.content.Context;
 
 import com.google.gson.JsonObject;
 
+import sng.com.testhvn.R;
 import sng.com.testhvn.service.ProductService;
+import sng.com.testhvn.service.apiRequestModel.ProductResult;
 import sng.com.testhvn.service.dataprovider.ApiService;
 import sng.com.testhvn.util.Utils;
 
@@ -17,5 +19,9 @@ public class ProductServiceImp implements ProductService {
         return Utils.toJson(ApiService.getInstance(context).getAllProduct());
     }
 
-
+    @Override
+    public ProductResult getProductByBrand(Context context, String brandId) {
+        String query = context.getString(R.string.global_get_product_by_brand, brandId);
+        return ApiService.getInstance(context).getProductByBrand(query, null, null);
+    }
 }

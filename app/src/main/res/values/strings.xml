@@ -16,4 +16,9 @@
     <string name="comment_error_post">Some thing wrong! Please try again later</string>
     <string name="glbal_voice_not_supported">Your device not supported voice input</string>
     <string name="global_speech_text">Say Product ID</string>
+    <string name="qrcode_camera_not_found">Sorry, Camera not found</string>
+    <string name="home_page">Home</string>
+    <string name="comment_page">Comment</string>
+    <string name="product_detail">Product Detail</string>
+    <string name="product_all_product">All Product</string>
 </resources>

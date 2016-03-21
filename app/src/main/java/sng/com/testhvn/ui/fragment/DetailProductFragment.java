@@ -1,6 +1,7 @@
 package sng.com.testhvn.ui.fragment;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -19,7 +20,9 @@ import sng.com.testhvn.adapter.ReviewAdapter;
 import sng.com.testhvn.loader.UserLoader;
 import sng.com.testhvn.model.Comment;
 import sng.com.testhvn.model.product.Product;
+import sng.com.testhvn.model.user.User;
 import sng.com.testhvn.service.apiRequestModel.UserResult;
+import sng.com.testhvn.ui.activity.HomeActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +34,7 @@ public class DetailProductFragment extends BaseLoadingFragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static String ARG_PRODUCT_DETAIL = "PRODUCT_DETAIL";
     private static String ARG_PRODUCT_COMMENT = "PRODUCT_COMMENT";
+    private static String ARG_PRODUCT_LIST = "PRODUCT_LIST";
     private static String ARG_COMMENT = "COMMENT";
     public static final String TAG = "DetailProductFragment";
     private static final int LOADER_GET_ALL_USER = 0;
@@ -44,20 +48,27 @@ public class DetailProductFragment extends BaseLoadingFragment {
     private TextView mTvStock;
     private TextView mTvColor;
     private RecyclerView mRecyclerView;
-    private Product mProductResult;
-    private ArrayList<Comment> mListComment;
-
     private ReviewAdapter mReviewAdapter;
 
-    public DetailProductFragment() {
-        // Required empty public constructor
+    private Product mProductResult;
+    private ArrayList<Comment> mListComment;
+    private ArrayList<Product> mListProduct;
+    private ArrayList<User> mListUser;
+
+    @Override
+    public void setUserVisibleHint(boolean visible) {
+        super.setUserVisibleHint(visible);
+        if (visible && isResumed()) {
+            onResume();
+        }
     }
 
-    public static DetailProductFragment newInstance(Product product, ArrayList<Comment> listComment) {
+    public static DetailProductFragment newInstance(ArrayList<Product> listProduct, Product product, ArrayList<Comment> listComment) {
         DetailProductFragment fragment = new DetailProductFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_PRODUCT_DETAIL, product);
         args.putParcelableArrayList(ARG_PRODUCT_COMMENT, listComment);
+        args.putParcelableArrayList(ARG_PRODUCT_LIST, listProduct);
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,13 +79,14 @@ public class DetailProductFragment extends BaseLoadingFragment {
         if (getArguments() != null) {
             mProductResult = getArguments().getParcelable(ARG_PRODUCT_DETAIL);
             mListComment = getArguments().getParcelableArrayList(ARG_PRODUCT_COMMENT);
+            mListProduct = getArguments().getParcelableArrayList(ARG_PRODUCT_LIST);
         }
         mReviewAdapter = new ReviewAdapter(getContext());
     }
 
     @Override
     public View onCreateContentView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                                    Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_detail_product, container, false);
         mTvDescripton = (TextView) view.findViewById(R.id.tv_description);
@@ -85,6 +97,9 @@ public class DetailProductFragment extends BaseLoadingFragment {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
+        if (getActivity() instanceof HomeActivity){
+            ((HomeActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.product_detail));
+        }
         return view;
     }
 
@@ -97,6 +112,19 @@ public class DetailProductFragment extends BaseLoadingFragment {
         mTvDescripton.setText("" + mProductResult.getDescription());
         mTvStock.setText(getString(R.string.product_status) + mProductResult.getAvailabilityStatus());
         mTvColor.setText(getString(R.string.product_color) + mProductResult.getColour());
+
+        if (!getUserVisibleHint()) {
+            return;
+        }
+        if (getActivity() instanceof HomeActivity) {
+            ((HomeActivity) getActivity()).btnAddReview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CommentFragment fragment = CommentFragment.newInstance(mListProduct, mListUser, mProductResult);
+                    getFragmentManager().beginTransaction().addToBackStack(CommentFragment.TAG).replace(R.id.fragment_container, fragment).commit();
+                }
+            });
+        }
     }
 
     @Override
@@ -113,6 +141,7 @@ public class DetailProductFragment extends BaseLoadingFragment {
 
         @Override
         public void onLoadFinished(Loader<UserResult> loader, UserResult data) {
+            setmListUser((ArrayList) data.getResults());
             mReviewAdapter.setData(mListComment, (ArrayList) data.getResults());
             mRecyclerView.setAdapter(mReviewAdapter);
         }
@@ -122,4 +151,20 @@ public class DetailProductFragment extends BaseLoadingFragment {
 
         }
     };
+
+    public void setmListUser(ArrayList<User> list) {
+        if (mListUser == null) {
+            mListUser = new ArrayList<>();
+        }
+        mListUser.clear();
+        mListUser.addAll(list);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (getActivity() instanceof HomeActivity) {
+            ((HomeActivity) getActivity()).onDefaultFabClick();
+        }
+    }
 }

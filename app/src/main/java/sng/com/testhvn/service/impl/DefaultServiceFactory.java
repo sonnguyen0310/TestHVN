@@ -2,7 +2,6 @@ package sng.com.testhvn.service.impl;
 
 import android.content.Context;
 
-import retrofit.RestAdapter;
 import sng.com.testhvn.service.BrandService;
 import sng.com.testhvn.service.ProductService;
 import sng.com.testhvn.service.ReviewService;
@@ -13,16 +12,15 @@ import sng.com.testhvn.service.UserService;
  * Created by son.nguyen on 3/18/2016.
  */
 public class DefaultServiceFactory implements ServiceFactory {
-    private ProductServiceImp mProductService;
-    private CommentServiceImp mReviewService;
+    private ProductServiceImp mProductServiceImp;
+    private CommentServiceImp mReviewServiceImp;
     private BrandServiceImp mBrandServiceImp;
-    private RestAdapter mRetrofit;
     private UserServiceImp mUserServiceImp;
     private static DefaultServiceFactory sInstance;
 
     public DefaultServiceFactory(Context context) {
-        mProductService = new ProductServiceImp();
-        mReviewService = new CommentServiceImp();
+        mProductServiceImp = new ProductServiceImp();
+        mReviewServiceImp = new CommentServiceImp();
         mBrandServiceImp = new BrandServiceImp();
         mUserServiceImp = new UserServiceImp();
     }
@@ -36,12 +34,12 @@ public class DefaultServiceFactory implements ServiceFactory {
 
     @Override
     public ProductService getProductService() {
-        return mProductService;
+        return mProductServiceImp;
     }
 
     @Override
     public ReviewService getReviewService() {
-        return mReviewService;
+        return mReviewServiceImp;
     }
 
     @Override

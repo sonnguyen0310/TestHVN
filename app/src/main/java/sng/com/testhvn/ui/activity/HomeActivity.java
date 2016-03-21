@@ -21,15 +21,16 @@ public class HomeActivity extends BaseActivity {
         btnAddReview = (View) findViewById(R.id.fabAddReview);
         Fragment fragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().addToBackStack(HomeFragment.TAG).add(R.id.fragment_container, fragment).commit();
+        onDefaultFabClick();
+    }
 
+    public void onDefaultFabClick() {
         btnAddReview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommentFragment fragment = CommentFragment.newInstance(null, null);
+                CommentFragment fragment = CommentFragment.newInstance(null, null , null);
                 getSupportFragmentManager().beginTransaction().addToBackStack(CommentFragment.TAG).replace(R.id.fragment_container, fragment).commit();
             }
         });
-
     }
-
 }

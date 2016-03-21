@@ -11,11 +11,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="this is product"
+        android:layout_margin="5dp"
+        android:text="@string/comment_input_product"
         android:textColor="@color/red"
         android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_margin="5dp"/>
+        android:textStyle="bold" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -28,6 +28,7 @@
             android:layout_height="30dp"
             android:layout_margin="5dp"
             android:layout_toLeftOf="@+id/btn_qr_scan"
+            android:hint="@string/comment_input_product"
             android:background="@null" />
 
         <View
@@ -92,5 +93,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
         android:text="@string/comment.button_submit" />
 </LinearLayout>

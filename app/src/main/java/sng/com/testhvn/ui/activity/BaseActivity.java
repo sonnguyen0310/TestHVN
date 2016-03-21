@@ -2,7 +2,6 @@ package sng.com.testhvn.ui.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 public class BaseActivity extends AppCompatActivity {
     @Override
@@ -10,7 +9,4 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
     }
 
-    public void showToast(String string) {
-        Toast.makeText(getApplicationContext(), string, Toast.LENGTH_SHORT).show();
-    }
 }

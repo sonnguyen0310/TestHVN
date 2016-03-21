@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="global.base_url" translatable="false">https://api.parse.com</string>
+    <string name="global.get_product_by_brand">{\"brandID\":{\"$inQuery\":{\"where\":{\"name\":\"%1$s\"},\"className\":\"Brand\"}}}</string>
+    <!--<string name="global.get_product_by_brand">\?where={"brandID":{"$inQuery":{"where":{"name":"%1$s"},"className":"Brand"}}}&amp;order=dateCreated&amp;limit=10</string>-->
+
 </resources>

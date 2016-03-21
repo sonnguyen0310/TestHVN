@@ -24,7 +24,13 @@ public class Brand {
     @SerializedName("updatedAt")
     @Expose
     private String updatedAt;
-
+    public Brand(String createdAt, String description, String name, String objectId, String updatedAt){
+        setCreatedAt(createdAt);
+        setDescription(description);
+        setName(name);
+        setObjectId(objectId);
+        setUpdatedAt(updatedAt);
+    }
     /**
      * @return The createdAt
      */
