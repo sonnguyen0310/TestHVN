@@ -14,4 +14,6 @@
     <string name="comment_user_not_found">Email not valid, please check your email address</string>
     <string name="comment_input_product">Please input Product ID</string>
     <string name="comment_error_post">Some thing wrong! Please try again later</string>
+    <string name="glbal_voice_not_supported">Your device not supported voice input</string>
+    <string name="global_speech_text">Say Product ID</string>
 </resources>

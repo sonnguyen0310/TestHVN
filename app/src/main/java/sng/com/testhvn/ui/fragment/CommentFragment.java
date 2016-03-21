@@ -1,11 +1,15 @@
 package sng.com.testhvn.ui.fragment;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +22,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -46,6 +51,9 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     private static final int LOADER_GET_ALL_USER = 0;
     private static final int LOADER_GET_ALL_PRODUCT = 1;
     private static final int LOADER_POST_COMMENT = 2;
+
+    private static final int ACTIVITY_RESULT_VOICE_CODE = 100;
+    private static final int ACTIVITY_RESULT_QR_CODE = 101;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -102,11 +110,14 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
                                     Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_comment, container, false);
         mBtnQrScan = (View) view.findViewById(R.id.btn_qr_scan);
+        mBtnQrScan.setOnClickListener(this);
 
         mBtnSubmit = (Button) view.findViewById(R.id.btn_submit);
         mBtnSubmit.setOnClickListener(this);
 
         mBtnVoice = (View) view.findViewById(R.id.btn_voice);
+        mBtnVoice.setOnClickListener(this);
+
         mEdtComment = (EditText) view.findViewById(R.id.edt_comment);
         mEdtEmail = (EditText) view.findViewById(R.id.edt_email);
         mEdtProductId = (AutoCompleteTextView) view.findViewById(R.id.edt_product_id);
@@ -261,7 +272,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         postReview.setUserID(userId);
         Bundle bundle = new Bundle();
         bundle.putParcelable(ARG_POST_REVIEW, postReview);
-        getLoaderManager().restartLoader(LOADER_POST_COMMENT,bundle,mPostReviewLoaderCallBack);
+        getLoaderManager().restartLoader(LOADER_POST_COMMENT, bundle, mPostReviewLoaderCallBack);
     }
 
     private void showMissingField(View v) {
@@ -286,6 +297,29 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
             case R.id.btn_submit:
                 onSubmit();
                 break;
+            case R.id.btn_voice:
+                promptSpeechInput();
+                break;
+            case R.id.btn_qr_scan:
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("sonnguyen", "onActivityResult: " +resultCode + " / " + getActivity().RESULT_OK + " / " + requestCode);
+        switch (requestCode) {
+            case ACTIVITY_RESULT_VOICE_CODE:
+                if (resultCode == getActivity().RESULT_OK && null != data) {
+
+                    ArrayList<String> result = data
+                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    mEdtProductId.setText(result.get(0));
+                }
+                break;
+            case ACTIVITY_RESULT_QR_CODE:
+                break;
         }
     }
 
@@ -295,6 +329,22 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         mEdtProductId.setAdapter(mProductAutoAdapter);
         mEdtProductId.setThreshold(1);
         mProductAutoAdapter.notifyDataSetChanged();
+    }
+
+    private void promptSpeechInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                getString(R.string.global_speech_text));
+        try {
+            startActivityForResult(intent, ACTIVITY_RESULT_VOICE_CODE);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(getContext(),
+                    getString(R.string.glbal_voice_not_supported),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     private LoaderManager.LoaderCallbacks<UserResult> mUserResultLoaderCallbacks = new LoaderManager.LoaderCallbacks<UserResult>() {
@@ -346,10 +396,10 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
 
         @Override
         public void onLoadFinished(Loader<Response> loader, Response data) {
-            if (Utils.toJson(data).toString().contains("createdAt") && Utils.toJson(data).toString().contains("createdAt")){
+            if (Utils.toJson(data).toString().contains("createdAt") && Utils.toJson(data).toString().contains("createdAt")) {
 
-            }else {
-                Toast.makeText(getContext(),getString(R.string.comment_error_post),Toast.LENGTH_LONG);
+            } else {
+                Toast.makeText(getContext(), getString(R.string.comment_error_post), Toast.LENGTH_LONG);
             }
         }
 
