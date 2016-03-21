@@ -29,7 +29,7 @@ import sng.com.testhvn.service.apiRequestModel.BrandResult;
 import sng.com.testhvn.service.apiRequestModel.CommentResult;
 import sng.com.testhvn.service.apiRequestModel.ProductResult;
 
-public class HomeFragment extends BaseFragment {
+public class HomeFragment extends BaseLoadingFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     public static final String TAG = "HomeFragment";
@@ -76,7 +76,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateContentView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
@@ -90,6 +90,11 @@ public class HomeFragment extends BaseFragment {
 
         return view;
     }
+
+//    @Override
+//    protected View onCreateContentView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+//        return null;
+//    }
 
 
     @Override
@@ -147,6 +152,7 @@ public class HomeFragment extends BaseFragment {
     private final LoaderManager.LoaderCallbacks<ProductResult> mCbLoadAllProduct = new LoaderManager.LoaderCallbacks<ProductResult>() {
         @Override
         public Loader<ProductResult> onCreateLoader(int id, Bundle args) {
+            showLoading();
             return new ProductLoader(getContext());
         }
 
@@ -186,6 +192,7 @@ public class HomeFragment extends BaseFragment {
         @Override
         public void onLoadFinished(Loader<CommentResult> loader, CommentResult data) {
             mCommentList.getResults().addAll(data.getResults());
+            showContent();
         }
 
         @Override

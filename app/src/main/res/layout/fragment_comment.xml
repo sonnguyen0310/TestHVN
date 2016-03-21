@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:padding="5dp">
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/edt_product_id"
             android:layout_width="match_parent"
             android:layout_height="30dp"

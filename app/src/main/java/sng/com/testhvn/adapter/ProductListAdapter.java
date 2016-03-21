@@ -34,6 +34,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductViewHolder> 
         if (null == mList) {
             mList = new ArrayList<>();
         }
+        mList.clear();
         mList.addAll(list);
         notifyDataSetChanged();
     }

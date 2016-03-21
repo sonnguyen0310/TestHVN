@@ -1,12 +1,15 @@
 package sng.com.testhvn.model.user;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by son.nguyen on 3/20/2016.
  */
-public class User {
+public class User implements Parcelable {
 
     @SerializedName("IsCustomer")
     @Expose
@@ -29,6 +32,26 @@ public class User {
     @SerializedName("userName")
     @Expose
     private String userName;
+
+    protected User(Parcel in) {
+        createdAt = in.readString();
+        email = in.readString();
+        objectId = in.readString();
+        updatedAt = in.readString();
+        userName = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     /**
      * @return The IsCustomer
@@ -128,4 +151,17 @@ public class User {
         this.userName = userName;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(createdAt);
+        dest.writeString(email);
+        dest.writeString(objectId);
+        dest.writeString(updatedAt);
+        dest.writeString(userName);
+    }
 }

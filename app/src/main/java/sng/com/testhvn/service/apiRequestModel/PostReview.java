@@ -1,5 +1,8 @@
 package sng.com.testhvn.service.apiRequestModel;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,7 +12,7 @@ import sng.com.testhvn.model.user.UserID;
 /**
  * Created by son.nguyen on 3/21/2016.
  */
-public class PostReview {
+public class PostReview implements Parcelable {
     @SerializedName("comment")
     @Expose
     private String comment;
@@ -22,6 +25,25 @@ public class PostReview {
     @SerializedName("userID")
     @Expose
     private UserID userID;
+
+    protected PostReview(Parcel in) {
+        comment = in.readString();
+    }
+
+    public PostReview() {
+    }
+
+    public static final Creator<PostReview> CREATOR = new Creator<PostReview>() {
+        @Override
+        public PostReview createFromParcel(Parcel in) {
+            return new PostReview(in);
+        }
+
+        @Override
+        public PostReview[] newArray(int size) {
+            return new PostReview[size];
+        }
+    };
 
     /**
      * @return The comment
@@ -79,4 +101,13 @@ public class PostReview {
         this.userID = userID;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(comment);
+    }
 }
