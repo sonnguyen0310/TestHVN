@@ -22,4 +22,6 @@
     <string name="product_detail">Product Detail</string>
     <string name="product_all_product">All Product</string>
     <string name="comment_success">Comment Success</string>
+    <string name="global_error">Something wrong! please try again</string>
+    <string name="global_try_again">Try again</string>
 </resources>

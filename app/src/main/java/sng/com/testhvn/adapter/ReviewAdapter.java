@@ -34,15 +34,19 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewHolder> {
     }
 
     public void setData(ArrayList<Comment> comments, ArrayList<User> listUser) {
-
         if (null == mCommentList) {
             mCommentList = new ArrayList<>();
         }
         if (null == mListUser) {
             mListUser = new ArrayList<>();
         }
-        mListUser.addAll(listUser);
-        mCommentList.addAll(sortList(comments));
+        if (listUser!=null){
+            mListUser.addAll(listUser);
+        }
+        if (comments!=null){
+            mCommentList.addAll(sortList(comments));
+        }
+
     }
 
     private ArrayList<Comment> sortList(ArrayList<Comment> list) {
@@ -131,6 +135,9 @@ class ReviewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setData(User user, Comment comment) {
+        if (user == null || comment == null ){
+            return;
+        }
         mTvName.setText("" + user.getUserName());
         mTvDate.setText("" + mReviewAdapter.newDateFormat(comment.getUpdatedAt()));
         mTvRating.setText("" + comment.getRating());

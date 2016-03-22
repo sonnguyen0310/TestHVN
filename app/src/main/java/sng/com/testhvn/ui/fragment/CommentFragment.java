@@ -455,7 +455,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         @Override
         public void onLoadFinished(Loader<Response> loader, Response data) {
             if (Utils.toJson(data).toString().contains("createdAt") && Utils.toJson(data).toString().contains("createdAt")) {
-                mHandler.sendEmptyMessageDelayed(SUCCESS,100);
+                mHandler.sendEmptyMessageDelayed(SUCCESS, 100);
             } else {
                 Toast.makeText(getContext(), getString(R.string.comment_error_post), Toast.LENGTH_LONG);
             }
@@ -472,7 +472,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == SUCCESS) {
-                setDialogText(getString(R.string.comment_success), new DialogInterface.OnClickListener() {
+                setDialogText(getString(R.string.comment_success),"ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Fragment fragment = new HomeFragment();
@@ -484,12 +484,12 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         }
     };
 
-    private void setDialogText(String mess, DialogInterface.OnClickListener listener) {
+    private void setDialogText(String mess, String button, DialogInterface.OnClickListener listener) {
         if (mBuilder == null) {
             mBuilder = new AlertDialog.Builder(getContext());
             mBuilder.setMessage(mess)
                     .setCancelable(false)
-                    .setPositiveButton("OK", listener);
+                    .setPositiveButton(button, listener);
         }
         mBuilder.show();
     }

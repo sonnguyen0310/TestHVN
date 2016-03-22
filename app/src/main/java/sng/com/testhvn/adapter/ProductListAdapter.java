@@ -34,7 +34,9 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductViewHolder> 
             mList = new ArrayList<>();
         }
         mList.clear();
-        mList.addAll(list);
+        if (list!=null){
+            mList.addAll(list);
+        }
         notifyDataSetChanged();
     }
 
@@ -72,6 +74,9 @@ class ProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     }
 
     public void setData(Product product, int position) {
+        if (product == null) {
+            return;
+        }
         mPosition = position;
         mTitle.setText(product.getProductName() + "");
         mPrice.setText(product.getPrice() + "");

@@ -3,10 +3,12 @@ package sng.com.testhvn.ui.fragment;
  * Created by son.nguyen on 3/17/2016.
  */
 
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -60,6 +62,7 @@ public class HomeFragment extends BaseLoadingFragment {
     private String mParam2;
     private OnProductListListener mOnProductListener;
     private OnFragmentInteractionListener mListener;
+    private AlertDialog.Builder mBuilder;
 
     public HomeFragment() {
     }
@@ -120,6 +123,7 @@ public class HomeFragment extends BaseLoadingFragment {
     @Override
     public void onStart() {
         super.onStart();
+        onUpdateUI();
         getLoaderManager().restartLoader(LOADER_GET_ALL_COMMENT, null, mCbLoadAllComment);
         mOnProductListener = new OnProductListListener() {
             @Override
@@ -147,7 +151,6 @@ public class HomeFragment extends BaseLoadingFragment {
 
             }
         });
-        onUpdateUI();
     }
 
     public interface OnFragmentInteractionListener {
@@ -161,7 +164,7 @@ public class HomeFragment extends BaseLoadingFragment {
 
     private void onUpdateBrand() {
         getLoaderManager().restartLoader(LOADER_GET_ALL_BRAND, null, mLoadAllBrandCb);
-    }
+    }   
 
     private final LoaderManager.LoaderCallbacks<BrandResult> mLoadAllBrandCb = new LoaderManager.LoaderCallbacks<BrandResult>() {
         @Override
@@ -172,6 +175,12 @@ public class HomeFragment extends BaseLoadingFragment {
         @Override
         public void onLoadFinished(Loader<BrandResult> loader, BrandResult data) {
             if (null == data) {
+                setDialogText(getString(R.string.global_error), getString(R.string.global_try_again), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getLoaderManager().restartLoader(LOADER_GET_ALL_BRAND, null, mLoadAllBrandCb);
+                    }
+                });
                 return;
             }
 
@@ -197,14 +206,20 @@ public class HomeFragment extends BaseLoadingFragment {
 
         @Override
         public void onLoadFinished(Loader<ProductResult> loader, ProductResult data) {
+            showContent();
             if (null == data || !(data.getResults().size() > 0)) {
+                setDialogText(getString(R.string.global_error), getString(R.string.global_try_again), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getLoaderManager().restartLoader(LOADER_GET_ALL_PRODUCT, null, mCbLoadAllProduct);
+                    }
+                });
                 return;
             }
             mProductResult = data;
             mProductListAdapter.setData((ArrayList) data.getResults());
             mCommentList.getResults().addAll(data.getComment());
             mRvListProduct.setAdapter(mProductListAdapter);
-            showContent();
         }
 
         @Override
@@ -216,14 +231,16 @@ public class HomeFragment extends BaseLoadingFragment {
     private final LoaderManager.LoaderCallbacks<CommentResult> mCbLoadAllComment = new LoaderManager.LoaderCallbacks<CommentResult>() {
         @Override
         public Loader<CommentResult> onCreateLoader(int id, Bundle args) {
-            showLoading();
             return new AllReviewLoader(getContext());
         }
 
         @Override
         public void onLoadFinished(Loader<CommentResult> loader, CommentResult data) {
-            mCommentList.getResults().addAll(data.getResults());
             showContent();
+            if (data != null) {
+                mCommentList.getResults().addAll(data.getResults());
+            }
+
         }
 
         @Override
@@ -233,9 +250,14 @@ public class HomeFragment extends BaseLoadingFragment {
     };
 
     private final LoaderManager.LoaderCallbacks<ProductResult> mCbLoadProducByBrand = new LoaderManager.LoaderCallbacks<ProductResult>() {
+        String brandId;
+        Bundle mBundle = new Bundle();
+
         @Override
         public Loader<ProductResult> onCreateLoader(int id, Bundle args) {
             showLoading();
+            brandId = args.getString(BRAND_ID);
+            mBundle.putAll(args);
             return new ProductByBrandLoader(getContext(), args.getString(BRAND_ID));
         }
 
@@ -250,6 +272,13 @@ public class HomeFragment extends BaseLoadingFragment {
                 }
                 mProductListAdapter.setData((ArrayList) data.getResults());
                 mRvListProduct.setAdapter(mProductListAdapter);
+            } else {
+                setDialogText(getString(R.string.global_error), getString(R.string.global_try_again), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getLoaderManager().restartLoader(LOADER_GET_PRODUCT_BY_BRAND, mBundle, mCbLoadProducByBrand);
+                    }
+                });
             }
             showContent();
         }
@@ -276,5 +305,16 @@ public class HomeFragment extends BaseLoadingFragment {
             }
         }
         return listComment;
+    }
+
+
+    private void setDialogText(String mess, String button, DialogInterface.OnClickListener listener) {
+        if (mBuilder == null) {
+            mBuilder = new AlertDialog.Builder(getContext());
+            mBuilder.setMessage(mess)
+                    .setCancelable(false)
+                    .setPositiveButton(button, listener);
+        }
+        mBuilder.show();
     }
 }
