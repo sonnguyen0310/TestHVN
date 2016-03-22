@@ -12,6 +12,7 @@
         android:layout_height="50dp"
         android:layout_alignParentLeft="true"
         android:layout_margin="5dp"
+        android:visibility="gone"
         android:src="@drawable/avatar_ico"/>
 
     <LinearLayout

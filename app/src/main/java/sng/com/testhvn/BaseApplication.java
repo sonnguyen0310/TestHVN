@@ -1,6 +1,5 @@
 package sng.com.testhvn;
 
-import sng.com.testhvn.service.ServiceFactory;
 import sng.com.testhvn.service.impl.DefaultServiceFactory;
 
 /**
@@ -14,15 +13,11 @@ public class BaseApplication extends android.app.Application {
     public void onCreate() {
         super.onCreate();
         sInstance = this;
-        mServiceFactory = new DefaultServiceFactory(getApplicationContext());
     }
 
     public static BaseApplication getsInstance() {
         return sInstance;
     }
 
-    public static ServiceFactory getServiceFactoryInstance() {
-        return sInstance.mServiceFactory;
-    }
 
 }

@@ -118,6 +118,10 @@ public class HomeFragment extends BaseLoadingFragment {
         if (getActivity() instanceof HomeActivity) {
             ((HomeActivity) getActivity()).btnAddReview.setVisibility(View.VISIBLE);
         }
+        if (getActivity() instanceof HomeActivity) {
+            ((HomeActivity) getActivity()).btnAddReview.setVisibility(View.VISIBLE);
+            ((HomeActivity) getActivity()).onDefaultFabClick();
+        }
     }
 
     @Override
@@ -164,7 +168,7 @@ public class HomeFragment extends BaseLoadingFragment {
 
     private void onUpdateBrand() {
         getLoaderManager().restartLoader(LOADER_GET_ALL_BRAND, null, mLoadAllBrandCb);
-    }   
+    }
 
     private final LoaderManager.LoaderCallbacks<BrandResult> mLoadAllBrandCb = new LoaderManager.LoaderCallbacks<BrandResult>() {
         @Override

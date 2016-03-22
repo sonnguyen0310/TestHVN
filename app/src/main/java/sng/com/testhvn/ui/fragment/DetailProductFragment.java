@@ -1,7 +1,6 @@
 package sng.com.testhvn.ui.fragment;
 
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -134,7 +133,7 @@ public class DetailProductFragment extends BaseLoadingFragment {
                 public void onClick(View v) {
                     try{
                         CommentFragment fragment = CommentFragment.newInstance(mListProduct, mListUser, mProductResult);
-                        getFragmentManager().beginTransaction().addToBackStack(CommentFragment.TAG).replace(R.id.fragment_container, fragment).commit();
+                        getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(CommentFragment.TAG).replace(R.id.fragment_container, fragment).commit();
                     }catch (Exception e){
                         e.printStackTrace();
                     }
@@ -177,13 +176,13 @@ public class DetailProductFragment extends BaseLoadingFragment {
         mListUser.addAll(list);
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (getActivity() instanceof HomeActivity) {
-            ((HomeActivity) getActivity()).onDefaultFabClick();
-        }
-    }
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        if (getActivity() instanceof HomeActivity) {
+//            ((HomeActivity) getActivity()).onDefaultFabClick();
+//        }
+//    }
 
     private final LoaderManager.LoaderCallbacks<CommentResult> mCbLoadAllComment = new LoaderManager.LoaderCallbacks<CommentResult>() {
         @Override
