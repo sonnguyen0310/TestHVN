@@ -1,6 +1,7 @@
 package sng.com.testhvn.ui.fragment;
 
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +10,7 @@ import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -80,6 +82,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     private User mUser;
     private ArrayAdapter<String> mProductAutoAdapter;
     private FabListener mFabListener;
+    private AlertDialog.Builder mBuilder;
 
     public static CommentFragment newInstance(ArrayList<Product> listProduct, ArrayList<User> listUser, Product product) {
         CommentFragment fragment = new CommentFragment();
@@ -150,6 +153,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         if (mProduct != null) {
             mEdtProductId.setText(mProduct.getObjectId());
             mTvProductName.setText(mProduct.getProductName());
+            setEnableView();
         }
         mEdtProductId.addTextChangedListener(new TextWatcher() {
             private Timer timer = new Timer();
@@ -220,17 +224,17 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     }
 
     private void setEnableView() {
-        mEdtComment.setActivated(true);
-        mEdtEmail.setActivated(true);
-        mEdtRating.setActivated(true);
-        mBtnSubmit.setActivated(true);
+        mEdtComment.setEnabled(true);
+        mEdtEmail.setEnabled(true);
+        mEdtRating.setEnabled(true);
+        mBtnSubmit.setEnabled(true);
     }
 
     private void setDisableView() {
-        mEdtComment.setActivated(false);
-        mEdtEmail.setActivated(false);
-        mEdtRating.setActivated(false);
-        mBtnSubmit.setActivated(false);
+        mEdtComment.setEnabled(false);
+        mEdtEmail.setEnabled(false);
+        mEdtRating.setEnabled(false);
+        mBtnSubmit.setEnabled(false);
     }
 
     private List<String> getListProductID() {
@@ -451,8 +455,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         @Override
         public void onLoadFinished(Loader<Response> loader, Response data) {
             if (Utils.toJson(data).toString().contains("createdAt") && Utils.toJson(data).toString().contains("createdAt")) {
-                Toast.makeText(getContext(), getString(R.string.comment_success), Toast.LENGTH_LONG);
-                mHandler.sendEmptyMessage(SUCCESS);
+                mHandler.sendEmptyMessageDelayed(SUCCESS,100);
             } else {
                 Toast.makeText(getContext(), getString(R.string.comment_error_post), Toast.LENGTH_LONG);
             }
@@ -469,10 +472,25 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == SUCCESS) {
-                Fragment fragment = new HomeFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                setDialogText(getString(R.string.comment_success), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Fragment fragment = new HomeFragment();
+                        getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                    }
+                });
+
             }
         }
     };
 
+    private void setDialogText(String mess, DialogInterface.OnClickListener listener) {
+        if (mBuilder == null) {
+            mBuilder = new AlertDialog.Builder(getContext());
+            mBuilder.setMessage(mess)
+                    .setCancelable(false)
+                    .setPositiveButton("OK", listener);
+        }
+        mBuilder.show();
+    }
 }

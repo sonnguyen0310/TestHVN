@@ -46,6 +46,9 @@ public class QrScanActivity extends Activity implements QRCodeReaderView.OnQRCod
 
     @Override
     public void QRCodeNotFoundOnCamImage() {
-
+        Intent intent = new Intent();
+        intent.putExtra(QR_CODE_RESULT_FAIL, "camera not found");
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }
