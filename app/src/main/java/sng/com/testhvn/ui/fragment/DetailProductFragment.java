@@ -129,8 +129,13 @@ public class DetailProductFragment extends BaseLoadingFragment {
             ((HomeActivity) getActivity()).btnAddReview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    CommentFragment fragment = CommentFragment.newInstance(mListProduct, mListUser, mProductResult);
-                    getFragmentManager().beginTransaction().addToBackStack(CommentFragment.TAG).replace(R.id.fragment_container, fragment).commit();
+                    try{
+                        CommentFragment fragment = CommentFragment.newInstance(mListProduct, mListUser, mProductResult);
+                        getFragmentManager().beginTransaction().addToBackStack(CommentFragment.TAG).replace(R.id.fragment_container, fragment).commit();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
                 }
             });
         }

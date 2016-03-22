@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="5dp"
-    android:layout_marginTop="5dp"
-    android:background="@color/white">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white">
 
     <ImageView
         android:id="@+id/img_avatar"
@@ -12,7 +12,7 @@
         android:layout_height="50dp"
         android:layout_alignParentLeft="true"
         android:layout_margin="5dp"
-        android:src="@drawable/avatar_ico" />
+        android:src="@drawable/avatar_ico"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,14 +20,29 @@
         android:layout_margin="5dp"
         android:layout_toRightOf="@+id/img_avatar"
         android:orientation="vertical">
+        <RelativeLayout android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      >
+            <TextView
+                android:id="@+id/tv_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:maxLines="1"
+                android:text="Jonh"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/tv_user_name"
+                android:layout_alignParentRight="true"
+                android:maxLines="1"
+                android:text="date"
+                android:textStyle="bold"/>
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/tv_user_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:text="Jonh"
-            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_rating"
@@ -36,13 +51,13 @@
             android:maxLines="1"
             android:text="5"
             android:textColor="@color/red"
-            android:textStyle="italic" />
+            android:textStyle="italic"/>
 
         <TextView
             android:id="@+id/tv_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="awesome" />
+            android:text="awesome"/>
 
     </LinearLayout>
 </RelativeLayout>
