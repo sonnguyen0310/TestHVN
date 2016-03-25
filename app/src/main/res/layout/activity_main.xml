@@ -1,20 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.activity.BaseActivity">
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <FrameLayout android:id="@+id/fragment_container"
+                 xmlns:android="http://schemas.android.com/apk/res/android"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"/>
     <ImageView
         android:id="@+id/fabAddReview"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/comment_ico"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="10dp"/>
+        android:layout_margin="10dp"
+        android:src="@drawable/comment_ico"
+        android:visibility="gone"/>
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/multiple_actions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        tools:fab_addButtonColorNormal="@color/white"
+        tools:fab_addButtonColorPressed="@color/white_pressed"
+        tools:fab_addButtonPlusIconColor="@color/half_black"
+        tools:fab_labelStyle="@style/menu_labels_style">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_qr_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:fab_colorNormal="@color/white"
+            tools:fab_colorPressed="@color/white_pressed"
+            tools:fab_title="QR code scanner"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_voice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:fab_colorNormal="@color/white"
+            tools:fab_colorPressed="@color/white_pressed"
+            tools:fab_title="Use Voice input"/>
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_go_to_review"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:fab_colorNormal="@color/white"
+            tools:fab_colorPressed="@color/white_pressed"
+            tools:fab_title="Go to Review Page"/>
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 </RelativeLayout>
 

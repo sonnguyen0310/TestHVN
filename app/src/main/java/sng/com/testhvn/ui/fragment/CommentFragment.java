@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatRatingBar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -74,6 +75,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     private View mBtnVoice;
     private Button mBtnSubmit;
     private TextView mTvProductName;
+    private AppCompatRatingBar mRatingBar;
 
     private ArrayList<Product> mListProduct;
     private ArrayList<User> mListUser;
@@ -128,6 +130,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         mEdtComment = (EditText) view.findViewById(R.id.edt_comment);
         mEdtEmail = (EditText) view.findViewById(R.id.edt_email);
 
+        mRatingBar = (AppCompatRatingBar) view.findViewById(R.id.rb_Rating);
 
         mEdtProductId = (AutoCompleteTextView) view.findViewById(R.id.edt_product_id);
         mEdtRating = (EditText) view.findViewById(R.id.edt_rating);
@@ -147,6 +150,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     @Override
     public void onStart() {
         super.onStart();
+        Log.d(TAG, "onStart: ");
         if (mListProduct != null) {
             setAutoCompleteAdapter();
         }
@@ -275,6 +279,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     }
 
     private void onSubmit() {
+        Log.d("sng", "onSubmit: rating: " + (int) (Math.round(mRatingBar.getRating() * 2)));
         if (TextUtils.isEmpty(mEdtComment.getText())) {
             showMissingField(mEdtComment);
             return;
@@ -283,10 +288,11 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
             showMissingField(mEdtEmail);
             return;
         }
-        if (TextUtils.isEmpty(mEdtRating.getText())) {
-            showMissingField(mEdtRating);
-            return;
-        }
+//        if (TextUtils.isEmpty(mEdtRating.getText())) {
+//            showMissingField(mEdtRating);
+//            return;
+//        }
+
         if (!isGoodUser()) {
             Toast.makeText(getContext(), getString(R.string.comment_user_not_found), Toast.LENGTH_SHORT).show();
             mEdtEmail.requestFocus();
@@ -303,10 +309,9 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         userId.setObjectId(mUser.getObjectId());
         userId.setType("Pointer");
         userId.setClassName("User");
-        userId.setObjectId("s1k6Vzf9Uk");
 
         postReview.setComment(mEdtComment.getText().toString());
-        postReview.setRating(Integer.parseInt(mEdtRating.getText().toString()));
+        postReview.setRating((int) (Math.round(mRatingBar.getRating() * 2)));
         postReview.setProductID(productId);
         postReview.setUserID(userId);
         Bundle bundle = new Bundle();
@@ -472,7 +477,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == SUCCESS) {
-                setDialogText(getString(R.string.comment_success),"ok", new DialogInterface.OnClickListener() {
+                setDialogText(getString(R.string.comment_success), "ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Fragment fragment = new HomeFragment();

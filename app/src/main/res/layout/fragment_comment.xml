@@ -1,9 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="sng.com.testhvn.ui.fragment.CommentFragment">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="sng.com.testhvn.ui.fragment.CommentFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
@@ -15,7 +15,7 @@
         android:text="@string/comment_input_product"
         android:textColor="@color/red"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -28,8 +28,8 @@
             android:layout_height="30dp"
             android:layout_margin="5dp"
             android:layout_toLeftOf="@+id/btn_qr_scan"
-            android:hint="@string/comment_input_product"
-            android:background="@null" />
+            android:background="@null"
+            android:hint="@string/comment_input_product"/>
 
         <View
             android:id="@+id/btn_qr_scan"
@@ -38,7 +38,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
             android:layout_toLeftOf="@+id/btn_voice"
-            android:background="@drawable/qr_code_ico" />
+            android:background="@drawable/qr_code_ico"/>
 
         <View
             android:id="@+id/btn_voice"
@@ -46,13 +46,13 @@
             android:layout_height="25dp"
             android:layout_alignParentRight="true"
             android:layout_marginTop="5dp"
-            android:background="@drawable/voice_ico" />
+            android:background="@drawable/voice_ico"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_below="@+id/edt_product_id"
-            android:background="@color/black" />
+            android:background="@color/black"/>
     </RelativeLayout>
 
 
@@ -60,15 +60,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <EditText
             android:id="@+id/edt_email"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:hint="@string/comment.email_hint"
-            android:singleLine="true" />
+            android:singleLine="true"/>
 
         <EditText
             android:id="@+id/edt_rating"
@@ -77,7 +76,14 @@
             android:layout_weight="1"
             android:hint="@string/comment.rating_hint"
             android:inputType="number"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:visibility="gone"/>
+        <android.support.v7.widget.AppCompatRatingBar
+            android:id="@+id/rb_Rating"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:numStars="5"/>
     </LinearLayout>
 
     <EditText
@@ -85,7 +91,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:hint="@string/comment.comment_hint" />
+        android:hint="@string/comment.comment_hint"/>
 
     <Button
         android:id="@+id/btn_submit"
@@ -93,6 +99,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@color/colorPrimary"
-        android:textColor="@color/white"
-        android:text="@string/comment.button_submit" />
+        android:text="@string/comment.button_submit"
+        android:textColor="@color/white"/>
 </LinearLayout>

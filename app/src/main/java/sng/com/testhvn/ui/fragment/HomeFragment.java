@@ -127,7 +127,8 @@ public class HomeFragment extends BaseLoadingFragment {
     @Override
     public void onStart() {
         super.onStart();
-        onUpdateUI();
+        Log.d(TAG, "onStart: ");
+        onUpdateBrand();
         getLoaderManager().restartLoader(LOADER_GET_ALL_COMMENT, null, mCbLoadAllComment);
         mOnProductListener = new OnProductListListener() {
             @Override
@@ -162,9 +163,6 @@ public class HomeFragment extends BaseLoadingFragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    private void onUpdateUI() {
-        onUpdateBrand();
-    }
 
     private void onUpdateBrand() {
         getLoaderManager().restartLoader(LOADER_GET_ALL_BRAND, null, mLoadAllBrandCb);
@@ -173,6 +171,7 @@ public class HomeFragment extends BaseLoadingFragment {
     private final LoaderManager.LoaderCallbacks<BrandResult> mLoadAllBrandCb = new LoaderManager.LoaderCallbacks<BrandResult>() {
         @Override
         public Loader<BrandResult> onCreateLoader(int id, Bundle args) {
+            Log.d(TAG, "onCreateLoader: mLoadAllBrandCb");
             return new BrandLoader(getContext());
         }
 
@@ -204,6 +203,7 @@ public class HomeFragment extends BaseLoadingFragment {
     private final LoaderManager.LoaderCallbacks<ProductResult> mCbLoadAllProduct = new LoaderManager.LoaderCallbacks<ProductResult>() {
         @Override
         public Loader<ProductResult> onCreateLoader(int id, Bundle args) {
+            Log.d(TAG, "onCreateLoader: mCbLoadAllProduct");
             showLoading();
             return new ProductLoader(getContext());
         }
@@ -259,6 +259,7 @@ public class HomeFragment extends BaseLoadingFragment {
 
         @Override
         public Loader<ProductResult> onCreateLoader(int id, Bundle args) {
+            Log.d(TAG, "onCreateLoader: mCbLoadProducByBrand");
             showLoading();
             brandId = args.getString(BRAND_ID);
             mBundle.putAll(args);
