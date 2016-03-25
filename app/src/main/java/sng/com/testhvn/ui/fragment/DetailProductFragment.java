@@ -132,7 +132,7 @@ public class DetailProductFragment extends BaseLoadingFragment {
                 @Override
                 public void onClick(View v) {
                     try{
-                        CommentFragment fragment = CommentFragment.newInstance(mListProduct, mListUser, mProductResult);
+                        CommentFragment fragment = CommentFragment.newInstance(mListProduct, mListUser, mProductResult,null);
                         getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(CommentFragment.TAG).replace(R.id.fragment_container, fragment).commit();
                     }catch (Exception e){
                         e.printStackTrace();

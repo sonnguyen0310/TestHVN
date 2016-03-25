@@ -55,6 +55,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     private static final String ARG_LIST_USER = "param2";
     private static final String ARG_POST_REVIEW = "arg_post_review";
     private static final String ARG_PRODUCT = "arg_product";
+    private static final String ARG_PRODUCT_ID = "arg_product_id";
     private static final String PREF_USER_EMAIL = "user_mail";
     private static final int LOADER_GET_ALL_USER = 0;
     private static final int LOADER_GET_ALL_PRODUCT = 1;
@@ -85,13 +86,15 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     private ArrayAdapter<String> mProductAutoAdapter;
     private FabListener mFabListener;
     private AlertDialog.Builder mBuilder;
+    private String mProductID;
 
-    public static CommentFragment newInstance(ArrayList<Product> listProduct, ArrayList<User> listUser, Product product) {
+    public static CommentFragment newInstance(ArrayList<Product> listProduct, ArrayList<User> listUser, Product product, String productID) {
         CommentFragment fragment = new CommentFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(ARG_LIST_PRODUCT, listProduct);
         args.putParcelableArrayList(ARG_LIST_USER, listUser);
         args.putParcelable(ARG_PRODUCT, product);
+        args.putString(ARG_PRODUCT_ID, productID);
         fragment.setArguments(args);
         return fragment;
     }
@@ -111,6 +114,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
             mListProduct = getArguments().getParcelableArrayList(ARG_LIST_PRODUCT);
             mListUser = getArguments().getParcelableArrayList(ARG_LIST_USER);
             mProduct = getArguments().getParcelable(ARG_PRODUCT);
+            mProductID = getArguments().getString(ARG_PRODUCT_ID);
         }
     }
 
@@ -153,6 +157,9 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         Log.d(TAG, "onStart: ");
         if (mListProduct != null) {
             setAutoCompleteAdapter();
+        }
+        if (mProductID != null) {
+            mEdtProductId.setText(mProductID);
         }
         if (mProduct != null) {
             mEdtProductId.setText(mProduct.getObjectId());
