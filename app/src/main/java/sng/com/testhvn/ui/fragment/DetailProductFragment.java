@@ -91,7 +91,6 @@ public class DetailProductFragment extends BaseLoadingFragment {
             mListProduct = getArguments().getParcelableArrayList(ARG_PRODUCT_LIST);
         }
         mReviewAdapter = new ReviewAdapter(getContext());
-        showContent();
     }
 
     @Override
@@ -117,6 +116,7 @@ public class DetailProductFragment extends BaseLoadingFragment {
     @Override
     public void onResume() {
         super.onResume();
+        showContent();
         mTvName.setText("" + mProductResult.getProductName());
         mTvPrice.setText("" + mProductResult.getPrice() + "$");
         mTvDescripton.setText("" + mProductResult.getDescription());
@@ -126,21 +126,21 @@ public class DetailProductFragment extends BaseLoadingFragment {
         if (!getUserVisibleHint()) {
             return;
         }
-        if (getActivity() instanceof HomeActivity) {
-            ((HomeActivity) getActivity()).btnAddReview.setVisibility(View.VISIBLE);
-            ((HomeActivity) getActivity()).btnAddReview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try{
-                        CommentFragment fragment = CommentFragment.newInstance(mListProduct, mListUser, mProductResult,null);
-                        getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(CommentFragment.TAG).replace(R.id.fragment_container, fragment).commit();
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-
-                }
-            });
-        }
+//        if (getActivity() instanceof HomeActivity) {
+//            ((HomeActivity) getActivity()).btnAddReview.setVisibility(View.VISIBLE);
+//            ((HomeActivity) getActivity()).btnAddReview.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    try {
+//                        CommentFragment fragment = CommentFragment.newInstance(mListProduct, mListUser, mProductResult, null);
+//                        getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(CommentFragment.TAG).replace(R.id.fragment_container, fragment).commit();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                }
+//            });
+//        }
     }
 
     @Override
@@ -204,6 +204,7 @@ public class DetailProductFragment extends BaseLoadingFragment {
 
         }
     };
+
     private void setDialogText(String mess, String button, DialogInterface.OnClickListener listener) {
         if (mBuilder == null) {
             mBuilder = new AlertDialog.Builder(getContext());
@@ -212,5 +213,33 @@ public class DetailProductFragment extends BaseLoadingFragment {
                     .setPositiveButton(button, listener);
         }
         mBuilder.show();
+    }
+
+    public ArrayList<User> getmListUser() {
+        return mListUser;
+    }
+
+    public ArrayList<Comment> getmListComment() {
+        return mListComment;
+    }
+
+    public void setmListComment(ArrayList<Comment> mListComment) {
+        this.mListComment = mListComment;
+    }
+
+    public ArrayList<Product> getmListProduct() {
+        return mListProduct;
+    }
+
+    public void setmListProduct(ArrayList<Product> mListProduct) {
+        this.mListProduct = mListProduct;
+    }
+
+    public Product getmProductResult() {
+        return mProductResult;
+    }
+
+    public void setmProductResult(Product mProductResult) {
+        this.mProductResult = mProductResult;
     }
 }

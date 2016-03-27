@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PointF;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 
@@ -25,7 +26,28 @@ public class QrScanActivity extends Activity implements QRCodeReaderView.OnQRCod
         setContentView(R.layout.activity_qc_scanner);
 
         mQRCodeReaderView = (QRCodeReaderView) findViewById(R.id.qrdecoderview);
-        mQRCodeReaderView.setOnQRCodeReadListener(this);
+        mQRCodeReaderView.setOnQRCodeReadListener(new QRCodeReaderView.OnQRCodeReadListener() {
+            @Override
+            public void onQRCodeRead(String text, PointF[] points) {
+                Intent intent = new Intent();
+                intent.putExtra(QR_CODE_RESULT_SUCCESS, text);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+
+            @Override
+            public void cameraNotFound() {
+                Intent intent = new Intent();
+                intent.putExtra(QR_CODE_RESULT_FAIL, "camera not found");
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+
+            @Override
+            public void QRCodeNotFoundOnCamImage() {
+                Toast.makeText(QrScanActivity.this, "Please scan correct QR", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -47,7 +69,7 @@ public class QrScanActivity extends Activity implements QRCodeReaderView.OnQRCod
     @Override
     public void QRCodeNotFoundOnCamImage() {
         Intent intent = new Intent();
-        intent.putExtra(QR_CODE_RESULT_FAIL, "camera not found");
+        intent.putExtra(QR_CODE_RESULT_FAIL, "Please scan correct QR Image");
         setResult(RESULT_OK, intent);
         finish();
     }

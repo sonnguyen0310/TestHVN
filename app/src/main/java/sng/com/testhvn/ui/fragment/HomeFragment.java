@@ -116,11 +116,7 @@ public class HomeFragment extends BaseLoadingFragment {
     public void onResume() {
         super.onResume();
         if (getActivity() instanceof HomeActivity) {
-            ((HomeActivity) getActivity()).btnAddReview.setVisibility(View.VISIBLE);
-        }
-        if (getActivity() instanceof HomeActivity) {
-            ((HomeActivity) getActivity()).btnAddReview.setVisibility(View.VISIBLE);
-            ((HomeActivity) getActivity()).onDefaultFabClick();
+            ((HomeActivity) getActivity()).mFabMenu.setVisibility(View.VISIBLE);
         }
     }
 
@@ -134,7 +130,7 @@ public class HomeFragment extends BaseLoadingFragment {
             @Override
             public void onItemClick(int position) {
                 DetailProductFragment fragment = DetailProductFragment.newInstance((ArrayList) mProductResult.getResults(), mProductResult.getResults().get(position), getProductComment(mProductResult.getResults().get(position)));
-                getFragmentManager().beginTransaction().addToBackStack(DetailProductFragment.TAG).replace(R.id.fragment_container, fragment).commit();
+                replaceFragmmentWithStack(fragment,DetailProductFragment.TAG);
             }
         };
         mProductListAdapter.setOnItemClickListener(mOnProductListener);

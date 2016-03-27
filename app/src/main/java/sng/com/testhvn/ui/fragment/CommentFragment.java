@@ -34,7 +34,6 @@ import java.util.TimerTask;
 
 import retrofit.client.Response;
 import sng.com.testhvn.R;
-import sng.com.testhvn.interfaces.FabListener;
 import sng.com.testhvn.loader.PostCommentLoader;
 import sng.com.testhvn.loader.ProductLoader;
 import sng.com.testhvn.loader.UserLoader;
@@ -84,7 +83,6 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     private Product mProduct;
     private User mUser;
     private ArrayAdapter<String> mProductAutoAdapter;
-    private FabListener mFabListener;
     private AlertDialog.Builder mBuilder;
     private String mProductID;
 
@@ -142,9 +140,6 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         mTvProductName.setOnClickListener(this);
         setDisableView();
         if (getActivity() instanceof HomeActivity) {
-            ((HomeActivity) getActivity()).btnAddReview.setVisibility(View.GONE);
-        }
-        if (getActivity() instanceof HomeActivity) {
             ((HomeActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.comment_page));
         }
         return view;
@@ -199,17 +194,9 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     @Override
     public void onResume() {
         super.onResume();
-//        if (!getUserVisibleHint()) {
-//            return;
-//        }
-//        if (getActivity() instanceof HomeActivity) {
-//            ((HomeActivity) getActivity()).btnAddReview.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-//                }
-//            });
-//        }
+        if (getActivity() instanceof HomeActivity) {
+            ((HomeActivity) getActivity()).mFabMenu.setVisibility(View.GONE);
+        }
         showContent();
         try {
             mEdtEmail.setText(Utils.readPreference(getContext(), PREF_USER_EMAIL));
@@ -227,10 +214,10 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onPause() {
+        super.onPause();
         if (getActivity() instanceof HomeActivity) {
-            ((HomeActivity) getActivity()).btnAddReview.setVisibility(View.VISIBLE);
+            ((HomeActivity) getActivity()).mFabMenu.setVisibility(View.VISIBLE);
         }
     }
 
@@ -362,7 +349,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
                 break;
             case R.id.tv_product_name:
                 DetailProductFragment fragment = DetailProductFragment.newInstance(mListProduct, mProduct, null);
-                getFragmentManager().beginTransaction().addToBackStack(DetailProductFragment.TAG).replace(R.id.fragment_container, fragment).commit();
+                replaceFragmmentWithStack(fragment,DetailProductFragment.TAG);
                 break;
         }
     }
@@ -488,7 +475,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Fragment fragment = new HomeFragment();
-                        getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                        replaceFragmmentWithStack(fragment,HomeFragment.TAG);
                     }
                 });
 
