@@ -19,6 +19,7 @@ import retrofit.RestAdapter;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import retrofit.http.Body;
+import retrofit.http.Header;
 import retrofit.http.Query;
 import sng.com.testhvn.R;
 import sng.com.testhvn.service.apiRequestModel.BrandResult;
@@ -103,36 +104,43 @@ public class ApiService implements ApiCall {
         }
     }
 
-    @Override
-    public BrandResult getAllBrand() {
-        BrandResult results = mApiCall.getAllBrand();
-        return results;
+
+
+    public String getAppID() {
+        return "MlR6vYpYvLRxfibxE5cg0e73jXojL6jWFqXU6F8L";
+    }
+
+    public String getApiKEY() {
+        return "7BTXVX1qUXKUCnsngL8LxhpEHKQ8KKd798kKpD9W";
     }
 
     @Override
-    public Response getAllProduct() {
-        return mApiCall.getAllProduct();
+    public BrandResult getAllBrand(@Header("X-Parse-Application-Id") String applicationID, @Header("X-Parse-REST-API-Key") String apiKey) {
+        return  mApiCall.getAllBrand(applicationID,apiKey);
     }
 
     @Override
-    public ProductResult getProductByBrand(@Query("where") String where, @Query("order") String order, @Query("limit") String limit) {
-        return mApiCall.getProductByBrand(where,"dateCreated", "10");
-    }
-
-
-
-    @Override
-    public CommentResult getAllComment() {
-        return mApiCall.getAllComment();
+    public Response getAllProduct(@Header("X-Parse-Application-Id") String applicationID, @Header("X-Parse-REST-API-Key") String apiKey) {
+        return mApiCall.getAllProduct(applicationID,apiKey);
     }
 
     @Override
-    public Response submitReview(@Body PostReview postReview) {
-        return mApiCall.submitReview(postReview);
+    public ProductResult getProductByBrand(@Header("X-Parse-Application-Id") String applicationID, @Header("X-Parse-REST-API-Key") String apiKey, @Query("where") String where, @Query("order") String order, @Query("limit") String limit) {
+        return mApiCall.getProductByBrand(applicationID,apiKey,where, "dateCreated", "10");
     }
 
     @Override
-    public UserResult getAllUser() {
-        return mApiCall.getAllUser();
+    public CommentResult getAllComment(@Header("X-Parse-Application-Id") String applicationID, @Header("X-Parse-REST-API-Key") String apiKey) {
+        return mApiCall.getAllComment(applicationID,apiKey);
+    }
+
+    @Override
+    public Response submitReview(@Header("X-Parse-Application-Id") String applicationID, @Header("X-Parse-REST-API-Key") String apiKey, @Body PostReview postReview) {
+        return mApiCall.submitReview(applicationID,apiKey,postReview);
+    }
+
+    @Override
+    public UserResult getAllUser(@Header("X-Parse-Application-Id") String applicationID, @Header("X-Parse-REST-API-Key") String apiKey) {
+        return mApiCall.getAllUser(applicationID,apiKey);
     }
 }

@@ -2,6 +2,7 @@ package sng.com.testhvn.loader;
 
 import android.content.Context;
 
+import sng.com.testhvn.R;
 import sng.com.testhvn.service.apiRequestModel.CommentResult;
 import sng.com.testhvn.service.impl.DefaultServiceFactory;
 
@@ -16,6 +17,6 @@ public class AllReviewLoader extends BaseLoader<CommentResult> {
 
     @Override
     protected CommentResult doLoadInBackground() throws Exception {
-        return DefaultServiceFactory.getsInstance(getContext()).getReviewService().getAllComment(getContext());
+        return DefaultServiceFactory.getsInstance(getContext()).getReviewService().getAllComment(getContext(),getContext().getString(R.string.app_id),getContext().getString(R.string.api_key));
     }
 }

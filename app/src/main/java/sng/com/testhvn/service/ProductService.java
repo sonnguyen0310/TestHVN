@@ -10,6 +10,6 @@ import sng.com.testhvn.service.apiRequestModel.ProductResult;
  * Created by son.nguyen on 3/18/2016.
  */
 public interface ProductService {
-   JsonObject getAllProduct(Context context);
-   ProductResult getProductByBrand(Context context,String brandID);
+   JsonObject getAllProduct(Context context,String appId, String apiKey);
+   ProductResult getProductByBrand(Context context,String appId, String apiKey,String brandID);
 }

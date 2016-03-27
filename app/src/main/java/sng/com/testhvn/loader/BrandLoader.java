@@ -2,6 +2,7 @@ package sng.com.testhvn.loader;
 
 import android.content.Context;
 
+import sng.com.testhvn.R;
 import sng.com.testhvn.service.apiRequestModel.BrandResult;
 import sng.com.testhvn.service.impl.DefaultServiceFactory;
 
@@ -15,6 +16,6 @@ public class BrandLoader extends BaseLoader<BrandResult>{
 
     @Override
     protected BrandResult doLoadInBackground() throws Exception {
-        return DefaultServiceFactory.getsInstance(getContext()).getBrandService().getAllBrand(getContext());
+        return DefaultServiceFactory.getsInstance(getContext()).getBrandService().getAllBrand(getContext(),getContext().getString(R.string.app_id),getContext().getString(R.string.api_key));
     }
 }

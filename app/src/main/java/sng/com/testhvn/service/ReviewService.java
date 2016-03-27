@@ -10,7 +10,7 @@ import sng.com.testhvn.service.apiRequestModel.PostReview;
  * Created by son.nguyen on 3/18/2016.
  */
 public interface ReviewService {
-    CommentResult getAllComment(Context context);
+    CommentResult getAllComment(Context context,String appId, String apiKey);
 
-    Response submitReview(Context context, PostReview postReview);
+    Response submitReview(Context context,String appId, String apiKey,PostReview postReview);
 }

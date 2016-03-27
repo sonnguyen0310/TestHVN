@@ -11,7 +11,7 @@ import sng.com.testhvn.service.dataprovider.ApiService;
  */
 public class UserServiceImp implements UserService {
     @Override
-    public UserResult getAllUser(Context context) {
-        return ApiService.getInstance(context).getAllUser();
+    public UserResult getAllUser(Context context,String appId, String apiKey) {
+        return ApiService.getInstance(context).getAllUser(appId, apiKey);
     }
 }

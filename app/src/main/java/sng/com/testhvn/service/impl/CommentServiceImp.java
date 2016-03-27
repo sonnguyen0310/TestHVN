@@ -13,12 +13,12 @@ import sng.com.testhvn.service.dataprovider.ApiService;
  */
 public class CommentServiceImp implements ReviewService {
     @Override
-    public CommentResult getAllComment(Context context) {
-        return ApiService.getInstance(context).getAllComment();
+    public CommentResult getAllComment(Context context, String appId, String apiKey) {
+        return ApiService.getInstance(context).getAllComment(appId, apiKey);
     }
 
     @Override
-    public Response submitReview(Context context, PostReview postReview) {
-        return ApiService.getInstance(context).submitReview(postReview);
+    public Response submitReview(Context context, String appId, String apiKey, PostReview postReview) {
+        return ApiService.getInstance(context).submitReview(appId, apiKey, postReview);
     }
 }

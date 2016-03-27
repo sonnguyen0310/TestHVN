@@ -11,7 +11,7 @@ import sng.com.testhvn.service.dataprovider.ApiService;
  */
 public class BrandServiceImp implements BrandService {
     @Override
-    public BrandResult getAllBrand(Context context) {
-        return ApiService.getInstance(context).getAllBrand();
+    public BrandResult getAllBrand(Context context,String appId, String apiKey) {
+        return ApiService.getInstance(context).getAllBrand(appId,apiKey);
     }
 }

@@ -15,13 +15,13 @@ import sng.com.testhvn.util.Utils;
  */
 public class ProductServiceImp implements ProductService {
     @Override
-    public JsonObject getAllProduct(Context context) {
-        return Utils.toJson(ApiService.getInstance(context).getAllProduct());
+    public JsonObject getAllProduct(Context context, String appId, String apiKey) {
+        return Utils.toJson(ApiService.getInstance(context).getAllProduct(appId, apiKey));
     }
 
     @Override
-    public ProductResult getProductByBrand(Context context, String brandId) {
+    public ProductResult getProductByBrand(Context context, String appID, String apiKey, String brandId) {
         String query = context.getString(R.string.global_get_product_by_brand, brandId);
-        return ApiService.getInstance(context).getProductByBrand(query, null, null);
+        return ApiService.getInstance(context).getProductByBrand(appID, brandId, query, null, null);
     }
 }
