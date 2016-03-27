@@ -1,7 +1,9 @@
 package sng.com.testhvn.ui.fragment;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import sng.com.testhvn.R;
@@ -10,17 +12,31 @@ import sng.com.testhvn.R;
  * Created by nguye on 3/17/2016.
  */
 public class BaseFragment extends Fragment {
+    private AlertDialog.Builder mBuilder;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
     public void replaceFragmmentWithStack(Fragment fragment, String tag) {
-        Log.d("sonnguyen", "replaceFragmmentWithStack: "+tag);
+        Log.d("sonnguyen", "replaceFragmmentWithStack: " + tag);
         getFragmentManager().beginTransaction().addToBackStack(tag).replace(R.id.fragment_container, fragment, tag).commit();
         getFragmentManager().executePendingTransactions();
     }
 
     private interface onRetry {
-    } ;
+    }
+
+    ;
+
+    public void setDialogText(String mess, String button, DialogInterface.OnClickListener listener) {
+        if (mBuilder == null) {
+            mBuilder = new AlertDialog.Builder(getContext());
+            mBuilder.setMessage(mess)
+                    .setCancelable(false)
+                    .setPositiveButton(button, listener);
+        }
+        mBuilder.show();
+    }
 }

@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import sng.com.testhvn.R;
 import sng.com.testhvn.adapter.BrandAdapter;
@@ -37,10 +37,9 @@ import sng.com.testhvn.ui.activity.HomeActivity;
 
 public class HomeFragment extends BaseLoadingFragment {
     // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     public static final String TAG = "HomeFragment";
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    public static final String ARG_LIST_BRAND = "LIST_BRAND";
+    private static final String ARG_BRAND_SELECTED = "BRAND_SELECTED";
     private static final int LOADER_GET_ALL_BRAND = 0;
     private static final int LOADER_GET_ALL_PRODUCT = 2;
     private static final int LOADER_GET_ALL_COMMENT = 3;
@@ -57,21 +56,17 @@ public class HomeFragment extends BaseLoadingFragment {
     private ProductResult mProductResult;
     private CommentResult mCommentList;
     private ArrayList<Brand> mBrandList;
-
-    private String mParam1;
-    private String mParam2;
+    private int mSelectedBrand = -1;
     private OnProductListListener mOnProductListener;
-    private OnFragmentInteractionListener mListener;
-    private AlertDialog.Builder mBuilder;
 
     public HomeFragment() {
     }
 
-    public static HomeFragment newInstance(String param1, String param2) {
+    public static HomeFragment newInstance(List<Brand> brands, int selected) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelableArrayList(ARG_LIST_BRAND, (ArrayList) brands);
+        args.putInt(ARG_BRAND_SELECTED, selected);
         fragment.setArguments(args);
         return fragment;
     }
@@ -80,8 +75,8 @@ public class HomeFragment extends BaseLoadingFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mBrandList = getArguments().getParcelableArrayList(ARG_LIST_BRAND);
+            mSelectedBrand = getArguments().getInt(ARG_BRAND_SELECTED);
         }
         showLoading();
         mCommentList = new CommentResult();
@@ -130,7 +125,7 @@ public class HomeFragment extends BaseLoadingFragment {
             @Override
             public void onItemClick(int position) {
                 DetailProductFragment fragment = DetailProductFragment.newInstance((ArrayList) mProductResult.getResults(), mProductResult.getResults().get(position), getProductComment(mProductResult.getResults().get(position)));
-                replaceFragmmentWithStack(fragment,DetailProductFragment.TAG);
+                replaceFragmmentWithStack(fragment, DetailProductFragment.TAG);
             }
         };
         mProductListAdapter.setOnItemClickListener(mOnProductListener);
@@ -161,7 +156,16 @@ public class HomeFragment extends BaseLoadingFragment {
 
 
     private void onUpdateBrand() {
-        getLoaderManager().restartLoader(LOADER_GET_ALL_BRAND, null, mLoadAllBrandCb);
+        if(mBrandList == null ||!(mBrandList.size()>0)){
+            getLoaderManager().restartLoader(LOADER_GET_ALL_BRAND, null, mLoadAllBrandCb);
+        }else {
+            mSpinnerAdapter.setData(mBrandList);
+            if (mSelectedBrand != -1)
+            {
+                mSpinner.setSelection(mSelectedBrand);
+            }
+        }
+
     }
 
     private final LoaderManager.LoaderCallbacks<BrandResult> mLoadAllBrandCb = new LoaderManager.LoaderCallbacks<BrandResult>() {
@@ -255,17 +259,18 @@ public class HomeFragment extends BaseLoadingFragment {
 
         @Override
         public Loader<ProductResult> onCreateLoader(int id, Bundle args) {
-            Log.d(TAG, "onCreateLoader: mCbLoadProducByBrand");
             showLoading();
             brandId = args.getString(BRAND_ID);
+            Log.d(TAG, "onCreateLoader: mCbLoadProducByBrand" + brandId);
             mBundle.putAll(args);
             return new ProductByBrandLoader(getContext(), args.getString(BRAND_ID));
         }
 
         @Override
         public void onLoadFinished(Loader<ProductResult> loader, ProductResult data) {
-            Log.d("sonnguyen", "onLoadFinished: " + data.getResults().size());
+
             if (data != null) {
+                Log.d("sonnguyen", "onLoadFinished: " + data.getResults().size());
                 mProductResult = data;
                 if (mProductListAdapter == null) {
                     mProductListAdapter = new ProductListAdapter(getContext());
@@ -309,13 +314,13 @@ public class HomeFragment extends BaseLoadingFragment {
     }
 
 
-    private void setDialogText(String mess, String button, DialogInterface.OnClickListener listener) {
-        if (mBuilder == null) {
-            mBuilder = new AlertDialog.Builder(getContext());
-            mBuilder.setMessage(mess)
-                    .setCancelable(false)
-                    .setPositiveButton(button, listener);
-        }
-        mBuilder.show();
-    }
+//    private void setDialogText(String mess, String button, DialogInterface.OnClickListener listener) {
+//        if (mBuilder == null) {
+//            mBuilder = new AlertDialog.Builder(getContext());
+//            mBuilder.setMessage(mess)
+//                    .setCancelable(false)
+//                    .setPositiveButton(button, listener);
+//        }
+//        mBuilder.show();
+//    }
 }

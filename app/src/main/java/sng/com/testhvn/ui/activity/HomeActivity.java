@@ -48,6 +48,8 @@ public class HomeActivity extends BaseActivity {
         ButterKnife.bind(this);
         Fragment fragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment, HomeFragment.TAG).commit();
+//        Fragment fragment = new SplashScreenFragment();
+//        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment, SplashScreenFragment.TAG).commit();
     }
 
 

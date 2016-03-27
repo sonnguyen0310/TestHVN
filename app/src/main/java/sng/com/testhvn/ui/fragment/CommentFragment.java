@@ -10,7 +10,6 @@ import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -83,7 +82,6 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     private Product mProduct;
     private User mUser;
     private ArrayAdapter<String> mProductAutoAdapter;
-    private AlertDialog.Builder mBuilder;
     private String mProductID;
 
     public static CommentFragment newInstance(ArrayList<Product> listProduct, ArrayList<User> listUser, Product product, String productID) {
@@ -483,13 +481,4 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         }
     };
 
-    private void setDialogText(String mess, String button, DialogInterface.OnClickListener listener) {
-        if (mBuilder == null) {
-            mBuilder = new AlertDialog.Builder(getContext());
-            mBuilder.setMessage(mess)
-                    .setCancelable(false)
-                    .setPositiveButton(button, listener);
-        }
-        mBuilder.show();
-    }
 }

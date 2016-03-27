@@ -4,10 +4,13 @@ package sng.com.testhvn.model.brand;
  * Created by son.nguyen on 3/19/2016.
  */
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Brand {
+public class Brand implements Parcelable {
 
     @SerializedName("createdAt")
     @Expose
@@ -31,6 +34,27 @@ public class Brand {
         setObjectId(objectId);
         setUpdatedAt(updatedAt);
     }
+
+    protected Brand(Parcel in) {
+        createdAt = in.readString();
+        description = in.readString();
+        name = in.readString();
+        objectId = in.readString();
+        updatedAt = in.readString();
+    }
+
+    public static final Creator<Brand> CREATOR = new Creator<Brand>() {
+        @Override
+        public Brand createFromParcel(Parcel in) {
+            return new Brand(in);
+        }
+
+        @Override
+        public Brand[] newArray(int size) {
+            return new Brand[size];
+        }
+    };
+
     /**
      * @return The createdAt
      */
@@ -101,4 +125,17 @@ public class Brand {
         this.updatedAt = updatedAt;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(createdAt);
+        dest.writeString(description);
+        dest.writeString(name);
+        dest.writeString(objectId);
+        dest.writeString(updatedAt);
+    }
 }

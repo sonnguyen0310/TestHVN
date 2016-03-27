@@ -1,12 +1,10 @@
 package sng.com.testhvn.ui.fragment;
 
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -58,7 +56,6 @@ public class DetailProductFragment extends BaseLoadingFragment {
     private ArrayList<Comment> mListComment;
     private ArrayList<Product> mListProduct;
     private ArrayList<User> mListUser;
-    private AlertDialog.Builder mBuilder;
 
     @Override
     public void setUserVisibleHint(boolean visible) {
@@ -205,15 +202,6 @@ public class DetailProductFragment extends BaseLoadingFragment {
         }
     };
 
-    private void setDialogText(String mess, String button, DialogInterface.OnClickListener listener) {
-        if (mBuilder == null) {
-            mBuilder = new AlertDialog.Builder(getContext());
-            mBuilder.setMessage(mess)
-                    .setCancelable(false)
-                    .setPositiveButton(button, listener);
-        }
-        mBuilder.show();
-    }
 
     public ArrayList<User> getmListUser() {
         return mListUser;

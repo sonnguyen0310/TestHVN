@@ -41,9 +41,11 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewHolder> {
             mListUser = new ArrayList<>();
         }
         if (listUser!=null){
+            mListUser.clear();
             mListUser.addAll(listUser);
         }
         if (comments!=null){
+            mCommentList.clear();
             mCommentList.addAll(sortList(comments));
         }
 

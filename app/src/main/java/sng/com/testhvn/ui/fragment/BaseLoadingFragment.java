@@ -34,6 +34,7 @@ public abstract class BaseLoadingFragment extends BaseFragment {
         mContent = (ViewGroup) view.findViewById(R.id.content);
         View contentView = onCreateContentView(inflater, mContent, savedInstanceState);
         mContent.addView(contentView);
+        showContent();
         return view;
     }
 
