@@ -105,7 +105,6 @@ public class ApiService implements ApiCall {
     }
 
 
-
     public String getAppID() {
         return "MlR6vYpYvLRxfibxE5cg0e73jXojL6jWFqXU6F8L";
     }
@@ -116,31 +115,31 @@ public class ApiService implements ApiCall {
 
     @Override
     public BrandResult getAllBrand(@Header("X-Parse-Application-Id") String applicationID, @Header("X-Parse-REST-API-Key") String apiKey) {
-        return  mApiCall.getAllBrand(applicationID,apiKey);
+        return mApiCall.getAllBrand(applicationID, apiKey);
     }
 
     @Override
     public Response getAllProduct(@Header("X-Parse-Application-Id") String applicationID, @Header("X-Parse-REST-API-Key") String apiKey) {
-        return mApiCall.getAllProduct(applicationID,apiKey);
+        return mApiCall.getAllProduct(applicationID, apiKey);
     }
 
     @Override
     public ProductResult getProductByBrand(@Header("X-Parse-Application-Id") String applicationID, @Header("X-Parse-REST-API-Key") String apiKey, @Query("where") String where, @Query("order") String order, @Query("limit") String limit) {
-        return mApiCall.getProductByBrand(applicationID,apiKey,where, "dateCreated", "10");
+        return mApiCall.getProductByBrand(applicationID, apiKey, where, "dateCreated", "10");
     }
 
     @Override
     public CommentResult getAllComment(@Header("X-Parse-Application-Id") String applicationID, @Header("X-Parse-REST-API-Key") String apiKey) {
-        return mApiCall.getAllComment(applicationID,apiKey);
+        return mApiCall.getAllComment(applicationID, apiKey);
     }
 
     @Override
     public Response submitReview(@Header("X-Parse-Application-Id") String applicationID, @Header("X-Parse-REST-API-Key") String apiKey, @Body PostReview postReview) {
-        return mApiCall.submitReview(applicationID,apiKey,postReview);
+        return mApiCall.submitReview(applicationID, apiKey, postReview);
     }
 
     @Override
     public UserResult getAllUser(@Header("X-Parse-Application-Id") String applicationID, @Header("X-Parse-REST-API-Key") String apiKey) {
-        return mApiCall.getAllUser(applicationID,apiKey);
+        return mApiCall.getAllUser(applicationID, apiKey);
     }
 }

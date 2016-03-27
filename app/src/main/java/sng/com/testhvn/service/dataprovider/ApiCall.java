@@ -40,7 +40,8 @@ public interface ApiCall {
     @GET("/1/classes/Product")
     ProductResult getProductByBrand(@Header("X-Parse-Application-Id") String applicationID,
                                     @Header("X-Parse-REST-API-Key") String apiKey,
-                                    @Query("where") String where, @Query("order") String order,
+                                    @Query("where") String where,
+                                    @Query("order") String order,
                                     @Query("limit") String limit);
 
     //==================================  Review     ==================================

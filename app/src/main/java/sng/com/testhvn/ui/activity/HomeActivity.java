@@ -21,7 +21,7 @@ import butterknife.OnClick;
 import sng.com.testhvn.R;
 import sng.com.testhvn.ui.fragment.CommentFragment;
 import sng.com.testhvn.ui.fragment.DetailProductFragment;
-import sng.com.testhvn.ui.fragment.HomeFragment;
+import sng.com.testhvn.ui.fragment.SplashScreenFragment;
 
 /**
  * Created by son.nguyen on 3/20/2016.
@@ -46,10 +46,10 @@ public class HomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        Fragment fragment = new HomeFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment, HomeFragment.TAG).commit();
-//        Fragment fragment = new SplashScreenFragment();
-//        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment, SplashScreenFragment.TAG).commit();
+//        Fragment fragment = new HomeFragment();
+//        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment, HomeFragment.TAG).commit();
+        Fragment fragment = new SplashScreenFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment, SplashScreenFragment.TAG).commit();
     }
 
 

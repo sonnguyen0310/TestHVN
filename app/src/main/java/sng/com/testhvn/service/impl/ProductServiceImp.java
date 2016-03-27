@@ -22,6 +22,6 @@ public class ProductServiceImp implements ProductService {
     @Override
     public ProductResult getProductByBrand(Context context, String appID, String apiKey, String brandId) {
         String query = context.getString(R.string.global_get_product_by_brand, brandId);
-        return ApiService.getInstance(context).getProductByBrand(appID, brandId, query, null, null);
+        return ApiService.getInstance(context).getProductByBrand(appID, apiKey, query, null, null);
     }
 }
