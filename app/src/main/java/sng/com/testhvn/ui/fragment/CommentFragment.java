@@ -241,12 +241,13 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         return list;
     }
 
-    private void checkProduct(String productId) {
+    private void checkProduct(final String productId) {
         if (null == mListProduct) {
             return;
         }
+        String newProductID = Utils.resultTTS(productId);
         for (int i = 0; i < mListProduct.size(); i++) {
-            if (mListProduct.get(i).getObjectId().toLowerCase().equals(productId.toLowerCase())) {
+            if (mListProduct.get(i).getObjectId().toLowerCase().equals(Utils.resultTTS(newProductID))) {
                 final int finalI = i;
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -390,7 +391,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.US.toString());
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
                 getString(R.string.global_speech_text));
         try {

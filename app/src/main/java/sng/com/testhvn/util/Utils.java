@@ -49,4 +49,18 @@ public class Utils {
         String result = preferences.getString(key, "");
         return result;
     }
+    public static String resultTTS(String text){
+        String [] DIGIT = {"zero","one","two","three","four","five","six","seven","eight","nine","ten"};
+        String [] NUMBER ={"1","2","3","4","5","6","7","8","9","0"};
+        String result = text;
+        for (int i = 0; i<DIGIT.length;i++)
+        {
+            if (result.toLowerCase().contains(DIGIT[i]))
+            {
+                result = result.replace(DIGIT[i],""+i);
+            }
+        }
+        result = result.replaceAll("\\s+","");
+        return result;
+    }
 }
