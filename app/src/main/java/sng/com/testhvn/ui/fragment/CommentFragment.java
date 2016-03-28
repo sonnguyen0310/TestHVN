@@ -83,6 +83,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     private User mUser;
     private ArrayAdapter<String> mProductAutoAdapter;
     private String mProductID;
+    private TextWatcher mTextWatcher;
 
     public static CommentFragment newInstance(ArrayList<Product> listProduct, ArrayList<User> listUser, Product product, String productID) {
         CommentFragment fragment = new CommentFragment();
@@ -159,7 +160,16 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
             mTvProductName.setText(mProduct.getProductName());
             setEnableView();
         }
-        mEdtProductId.addTextChangedListener(new TextWatcher() {
+//        mEdtProductId.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (hasFocus){
+//                    mEdtProductId.addTextChangedListener(mTextWatcher);
+//                }
+//            }
+//        });
+
+        mTextWatcher = new TextWatcher() {
             private Timer timer = new Timer();
             private final long DELAY = 500; // milliseconds
 
@@ -170,23 +180,26 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
 
             @Override
             public void onTextChanged(final CharSequence s, int start, int before, int count) {
-                timer.cancel();
-                timer = new Timer();
-                timer.schedule(
-                        new TimerTask() {
-                            @Override
-                            public void run() {
-                                checkProduct(s.toString());
-                            }
-                        },
-                        DELAY
-                );
+                if (mEdtProductId.isFocused()){
+                    timer.cancel();
+                    timer = new Timer();
+                    timer.schedule(
+                            new TimerTask() {
+                                @Override
+                                public void run() {
+                                    checkProduct(s.toString());
+                                }
+                            },
+                            DELAY
+                    );
+                }
             }
 
             @Override
             public void afterTextChanged(final Editable s) {
             }
-        });
+        };
+        mEdtProductId.addTextChangedListener(mTextWatcher);
     }
 
     @Override
@@ -245,15 +258,17 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         if (null == mListProduct) {
             return;
         }
-        String newProductID = Utils.resultTTS(productId);
+        final String newProductID = Utils.resultTTS(productId);
         for (int i = 0; i < mListProduct.size(); i++) {
-            if (mListProduct.get(i).getObjectId().toLowerCase().equals(Utils.resultTTS(newProductID))) {
+            if (mListProduct.get(i).getObjectId().toLowerCase().equals(newProductID.toLowerCase())) {
                 final int finalI = i;
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         mTvProductName.setText(mListProduct.get(finalI).getProductName());
+                        mEdtProductId.setText(newProductID);
                         setEnableView();
+                        mEdtEmail.requestFocus();
                     }
                 });
                 mProduct = mListProduct.get(i);
@@ -348,7 +363,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
                 break;
             case R.id.tv_product_name:
                 DetailProductFragment fragment = DetailProductFragment.newInstance(mListProduct, mProduct, null);
-                replaceFragmmentWithStack(fragment,DetailProductFragment.TAG);
+                replaceFragmmentWithStack(fragment, DetailProductFragment.TAG);
                 break;
         }
     }
@@ -474,7 +489,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Fragment fragment = new HomeFragment();
-                        replaceFragmmentWithStack(fragment,HomeFragment.TAG);
+                        replaceFragmmentWithStack(fragment, HomeFragment.TAG);
                     }
                 });
 
