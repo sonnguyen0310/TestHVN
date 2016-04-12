@@ -192,7 +192,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
 //            mEdtProductId.setText(mProductID);
 //        }
         if (mProduct != null) {
-            mEdtProductId.setText(mProduct.getObjectId());
+            mProductID = mProduct.getObjectId();
             mTvProductName.setText(mProduct.getProductName());
             setEnableView();
         }
