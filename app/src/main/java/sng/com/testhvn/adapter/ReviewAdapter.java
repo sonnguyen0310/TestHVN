@@ -2,6 +2,7 @@ package sng.com.testhvn.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,24 +35,21 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewHolder> {
     public ReviewAdapter(Context context, String productId) {
         mContext = context;
         mProductId = productId;
+        mCommentList = new ArrayList<>();
+        mListUser = new ArrayList<>();
     }
 
     public void setData(ArrayList<Comment> comments, ArrayList<User> listUser) {
-        if (null == mCommentList) {
-            mCommentList = new ArrayList<>();
-        }
-        if (null == mListUser) {
-            mListUser = new ArrayList<>();
-        }
+        mListUser.clear();
+        mCommentList.clear();
+        Log.d("sonnguyen", "setData: >>>>>>>>>>>>>>>>>>>>>> " + comments.size());
         if (listUser != null) {
-            mListUser.clear();
             mListUser.addAll(listUser);
         }
         if (comments != null) {
             if (Utils.getReview(mContext, mProductId) != null) {
                 comments.add(Utils.getReview(mContext, mProductId));
             }
-            mCommentList.clear();
             mCommentList.addAll(sortList(comments));
         }
 
@@ -99,8 +97,9 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewHolder> {
 
     @Override
     public void onBindViewHolder(ReviewHolder holder, int position) {
-        if (mCommentList == null || position > mCommentList.size() || position == mCommentList.size())
+        if (mCommentList == null || !(position < mCommentList.size()))
             return;
+        Log.d("sonnguyen", "onBindViewHolder: " + position + " / " + mCommentList.get(position).getObjectId());
         if (position < 10 && null != mCommentList.get(position) && null != mCommentList.get(position).getUserID()) {
             try {
                 holder.setData(getUserInfo(mCommentList.get(position).getUserID().getObjectId()), mCommentList.get(position));
@@ -146,9 +145,10 @@ class ReviewHolder extends RecyclerView.ViewHolder {
         if (user == null || comment == null) {
             return;
         }
+        double rating = (double) comment.getRating() / 2;
         mTvName.setText("" + user.getUserName());
         mTvDate.setText("" + mReviewAdapter.newDateFormat(comment.getUpdatedAt()));
-        mTvRating.setText("" + comment.getRating() / 2);
+        mTvRating.setText("" + rating);
         mTvComment.setText("" + comment.getComment());
     }
 }

@@ -7,6 +7,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import sng.com.testhvn.R;
 import sng.com.testhvn.adapter.ReviewAdapter;
 import sng.com.testhvn.loader.AllReviewLoader;
@@ -24,6 +27,7 @@ import sng.com.testhvn.model.user.User;
 import sng.com.testhvn.service.apiRequestModel.CommentResult;
 import sng.com.testhvn.service.apiRequestModel.UserResult;
 import sng.com.testhvn.ui.activity.HomeActivity;
+import sng.com.testhvn.util.Utils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,12 +48,6 @@ public class DetailProductFragment extends BaseLoadingFragment {
     private String mParam1;
     private String mParam2;
 
-    private TextView mTvName;
-    private TextView mTvDescripton;
-    private TextView mTvPrice;
-    private TextView mTvStock;
-    private TextView mTvColor;
-    private RecyclerView mRecyclerView;
     private ReviewAdapter mReviewAdapter;
 
     private Product mProductResult;
@@ -65,7 +63,11 @@ public class DetailProductFragment extends BaseLoadingFragment {
         }
     }
 
+    public DetailProductFragment() {
+    }
+
     public static DetailProductFragment newInstance(ArrayList<Product> listProduct, Product product, ArrayList<Comment> listComment) {
+        Log.d(TAG, "newInstance: listproduct: " + listProduct + " / prodyct: " + product + " / listcm: " + listComment);
         DetailProductFragment fragment = new DetailProductFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_PRODUCT_DETAIL, product);
@@ -78,33 +80,26 @@ public class DetailProductFragment extends BaseLoadingFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mProductResult = getArguments().getParcelable(ARG_PRODUCT_DETAIL);
-            mListComment = getArguments().getParcelableArrayList(ARG_PRODUCT_COMMENT);
-            if (mListComment == null) {
-                mListComment = new ArrayList<>();
-                getLoaderManager().restartLoader(LOADER_GET_ALL_COMMENT, null, mCbLoadAllComment);
-            }
-            mListProduct = getArguments().getParcelableArrayList(ARG_PRODUCT_LIST);
-        }
-        if (mProductResult != null) {
-            mReviewAdapter = new ReviewAdapter(getContext(), mProductResult.getObjectId());
-        } else {
-            mReviewAdapter = new ReviewAdapter(getContext(), null);
-        }
     }
 
+    @Bind(R.id.tv_description)
+    TextView mTvDescripton;
+    @Bind(R.id.tv_name)
+    TextView mTvName;
+    @Bind(R.id.tv_price)
+    TextView mTvPrice;
+    @Bind(R.id.tv_stock)
+    TextView mTvStock;
+    @Bind(R.id.tv_color)
+    TextView mTvColor;
+    @Bind(R.id.recycler)
+    RecyclerView mRecyclerView;
     @Override
     public View onCreateContentView(LayoutInflater inflater, ViewGroup container,
                                     Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_detail_product, container, false);
-        mTvDescripton = (TextView) view.findViewById(R.id.tv_description);
-        mTvName = (TextView) view.findViewById(R.id.tv_name);
-        mTvPrice = (TextView) view.findViewById(R.id.tv_price);
-        mTvStock = (TextView) view.findViewById(R.id.tv_stock);
-        mTvColor = (TextView) view.findViewById(R.id.tv_color);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler);
+        ButterKnife.bind(this, view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         if (getActivity() instanceof HomeActivity) {
@@ -117,6 +112,28 @@ public class DetailProductFragment extends BaseLoadingFragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (getArguments() != null) {
+            if (mListComment == null) {
+                mListComment = new ArrayList<>();
+            } else {
+                mListComment.clear();
+            }
+            mProductResult = getArguments().getParcelable(ARG_PRODUCT_DETAIL);
+            if (mProductResult != null) {
+                mReviewAdapter = new ReviewAdapter(getContext(), mProductResult.getObjectId());
+            } else {
+                mReviewAdapter = new ReviewAdapter(getContext(), null);
+            }
+            ArrayList<Comment> listAllComments = getArguments().getParcelableArrayList(ARG_PRODUCT_COMMENT);
+            if (listAllComments == null || listAllComments.size() == 0) {
+                getLoaderManager().restartLoader(LOADER_GET_ALL_COMMENT, null, mCbLoadAllComment);
+            } else {
+                mListComment.addAll(Utils.getProductComment(mProductResult, listAllComments));
+            }
+            mListProduct = getArguments().getParcelableArrayList(ARG_PRODUCT_LIST);
+
+            getLoaderManager().restartLoader(LOADER_GET_ALL_USER, null, mUserResultLoaderCallbacks);
+        }
         showContent();
         mTvName.setText("" + mProductResult.getProductName());
         mTvPrice.setText("" + mProductResult.getPrice() + "$");
@@ -132,18 +149,19 @@ public class DetailProductFragment extends BaseLoadingFragment {
     @Override
     public void onStart() {
         super.onStart();
-        getLoaderManager().restartLoader(LOADER_GET_ALL_USER, null, mUserResultLoaderCallbacks);
     }
 
     private LoaderManager.LoaderCallbacks<UserResult> mUserResultLoaderCallbacks = new LoaderManager.LoaderCallbacks<UserResult>() {
         @Override
         public Loader<UserResult> onCreateLoader(int id, Bundle args) {
+            Log.d(TAG, "onCreateLoader: mUserResultLoaderCallbacks");
             return new UserLoader(getContext());
         }
 
         @Override
         public void onLoadFinished(Loader<UserResult> loader, UserResult data) {
             setmListUser((ArrayList) data.getResults());
+            Log.d("sonnguyen", "onLoadFinished: <<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>" + mListComment.size());
             mReviewAdapter.setData(mListComment, (ArrayList) data.getResults());
             mRecyclerView.setAdapter(mReviewAdapter);
         }
@@ -166,13 +184,17 @@ public class DetailProductFragment extends BaseLoadingFragment {
     private final LoaderManager.LoaderCallbacks<CommentResult> mCbLoadAllComment = new LoaderManager.LoaderCallbacks<CommentResult>() {
         @Override
         public Loader<CommentResult> onCreateLoader(int id, Bundle args) {
+            Log.d(TAG, "mCbLoadAllComment: ");
             return new AllReviewLoader(getContext());
         }
 
         @Override
         public void onLoadFinished(Loader<CommentResult> loader, CommentResult data) {
+            if (mListComment == null) {
+                mListComment = new ArrayList<>();
+            }
             mListComment.clear();
-            mListComment.addAll(data.getResults());
+            mListComment.addAll(Utils.getProductComment(mProductResult, (ArrayList<Comment>) data.getResults()));
             mReviewAdapter.setData(mListComment, mListUser);
             mRecyclerView.setAdapter(mReviewAdapter);
             showContent();

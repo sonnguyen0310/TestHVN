@@ -31,6 +31,8 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import retrofit.client.Response;
 import sng.com.testhvn.R;
 import sng.com.testhvn.loader.PostCommentLoader;
@@ -66,15 +68,6 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     private String mParam1;
     private String mParam2;
 
-    private AutoCompleteTextView mEdtProductId;
-    private EditText mEdtEmail;
-    private EditText mEdtRating;
-    private EditText mEdtComment;
-    private View mBtnQrScan;
-    private View mBtnVoice;
-    private Button mBtnSubmit;
-    private TextView mTvProductName;
-    private AppCompatRatingBar mRatingBar;
 
     private ArrayList<Product> mListProduct;
     private ArrayList<User> mListUser;
@@ -115,27 +108,33 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         }
     }
 
+    @Bind(R.id.btn_qr_scan)
+    View mBtnQrScan;
+    @Bind(R.id.btn_submit)
+    Button mBtnSubmit;
+    @Bind(R.id.btn_voice)
+    View mBtnVoice;
+    @Bind(R.id.edt_comment)
+    EditText mEdtComment;
+    @Bind(R.id.edt_email)
+    EditText mEdtEmail;
+    @Bind(R.id.rb_Rating)
+    AppCompatRatingBar mRatingBar;
+    @Bind(R.id.edt_product_id)
+    AutoCompleteTextView mEdtProductId;
+    @Bind(R.id.edt_rating)
+    EditText mEdtRating;
+    @Bind(R.id.tv_product_name)
+    TextView mTvProductName;
+
     @Override
     public View onCreateContentView(LayoutInflater inflater, ViewGroup container,
                                     Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_comment, container, false);
-        mBtnQrScan = (View) view.findViewById(R.id.btn_qr_scan);
+        ButterKnife.bind(this, view);
         mBtnQrScan.setOnClickListener(this);
-
-        mBtnSubmit = (Button) view.findViewById(R.id.btn_submit);
         mBtnSubmit.setOnClickListener(this);
-
-        mBtnVoice = (View) view.findViewById(R.id.btn_voice);
         mBtnVoice.setOnClickListener(this);
-
-        mEdtComment = (EditText) view.findViewById(R.id.edt_comment);
-        mEdtEmail = (EditText) view.findViewById(R.id.edt_email);
-
-        mRatingBar = (AppCompatRatingBar) view.findViewById(R.id.rb_Rating);
-
-        mEdtProductId = (AutoCompleteTextView) view.findViewById(R.id.edt_product_id);
-        mEdtRating = (EditText) view.findViewById(R.id.edt_rating);
-        mTvProductName = (TextView) view.findViewById(R.id.tv_product_name);
         mTvProductName.setOnClickListener(this);
         setDisableView();
         if (getActivity() instanceof HomeActivity) {

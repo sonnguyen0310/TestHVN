@@ -11,11 +11,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
 import retrofit.client.Response;
 import sng.com.testhvn.model.Comment;
+import sng.com.testhvn.model.product.Product;
 import sng.com.testhvn.service.apiRequestModel.PostReview;
 
 
@@ -76,6 +78,20 @@ public class Utils {
         Gson gson = new Gson();
         Comment comment = gson.fromJson(jsString, Comment.class);
         return comment;
+    }
+
+    public static ArrayList<Comment> getProductComment(Product product, ArrayList<Comment> commentResult) {
+        ArrayList<Comment> listComment = new ArrayList<>();
+        for (Comment comment : commentResult) {
+            try {
+                if (product.getObjectId().equals(comment.getProductID().getObjectId())) {
+                    listComment.add(comment);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return listComment;
     }
 
     public static void savePreference(Context context, String key, String value) {

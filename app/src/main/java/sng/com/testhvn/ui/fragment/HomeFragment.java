@@ -4,7 +4,6 @@ package sng.com.testhvn.ui.fragment;
  */
 
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -20,6 +19,8 @@ import android.widget.AdapterView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import sng.com.testhvn.R;
 import sng.com.testhvn.adapter.BrandAdapter;
 import sng.com.testhvn.adapter.ProductListAdapter;
@@ -29,7 +30,6 @@ import sng.com.testhvn.loader.ProductByBrandLoader;
 import sng.com.testhvn.loader.ProductLoader;
 import sng.com.testhvn.model.Comment;
 import sng.com.testhvn.model.brand.Brand;
-import sng.com.testhvn.model.product.Product;
 import sng.com.testhvn.service.apiRequestModel.BrandResult;
 import sng.com.testhvn.service.apiRequestModel.CommentResult;
 import sng.com.testhvn.service.apiRequestModel.ProductResult;
@@ -47,8 +47,6 @@ public class HomeFragment extends BaseLoadingFragment {
     private static final String BRAND_ID = "brand_id";
     private static String ARG_PRODUCT_DETAIL = "PRODUCT_DETAIL";
 
-    private RecyclerView mRvListProduct;
-    private AppCompatSpinner mSpinner;
     private ProductListAdapter mProductListAdapter;
     private BrandAdapter mSpinnerAdapter;
 
@@ -82,17 +80,19 @@ public class HomeFragment extends BaseLoadingFragment {
         mCommentList = new CommentResult();
     }
 
+    @Bind(R.id.spn_brand_select)
+    AppCompatSpinner mSpinner;
+    @Bind(R.id.rc_product_list)
+    RecyclerView mRvListProduct;
     @Override
     public View onCreateContentView(LayoutInflater inflater, ViewGroup container,
                                     Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
-        mRvListProduct = (RecyclerView) view.findViewById(R.id.rc_product_list);
+        ButterKnife.bind(this, view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         mRvListProduct.setLayoutManager(linearLayoutManager);
         mProductListAdapter = new ProductListAdapter(getContext());
 
-        mSpinner = (AppCompatSpinner) view.findViewById(R.id.spn_brand_select);
         mSpinnerAdapter = new BrandAdapter(getContext());
         mSpinner.setAdapter(mSpinnerAdapter);
         if (getActivity() instanceof HomeActivity) {
@@ -100,11 +100,6 @@ public class HomeFragment extends BaseLoadingFragment {
         }
         return view;
     }
-
-//    @Override
-//    protected View onCreateContentView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        return null;
-//    }
 
 
     @Override
@@ -124,7 +119,7 @@ public class HomeFragment extends BaseLoadingFragment {
         mOnProductListener = new OnProductListListener() {
             @Override
             public void onItemClick(int position) {
-                DetailProductFragment fragment = DetailProductFragment.newInstance((ArrayList) mProductResult.getResults(), mProductResult.getResults().get(position), getProductComment(mProductResult.getResults().get(position)));
+                DetailProductFragment fragment = DetailProductFragment.newInstance((ArrayList) mProductResult.getResults(), mProductResult.getResults().get(position), (ArrayList<Comment>) mCommentList.getResults());
                 replaceFragmmentWithStack(fragment, DetailProductFragment.TAG);
             }
         };
@@ -149,11 +144,11 @@ public class HomeFragment extends BaseLoadingFragment {
         });
     }
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    @Override
+    public void onPause() {
+        super.onPause();
+        mSelectedBrand = mSpinner.getSelectedItemPosition();
     }
-
 
     private void onUpdateBrand() {
         if(mBrandList == null ||!(mBrandList.size()>0)){
@@ -222,6 +217,7 @@ public class HomeFragment extends BaseLoadingFragment {
             }
             mProductResult = data;
             mProductListAdapter.setData((ArrayList) data.getResults());
+            mCommentList.getResults().clear();
             mCommentList.getResults().addAll(data.getComment());
             mRvListProduct.setAdapter(mProductListAdapter);
         }
@@ -242,6 +238,7 @@ public class HomeFragment extends BaseLoadingFragment {
         public void onLoadFinished(Loader<CommentResult> loader, CommentResult data) {
             showContent();
             if (data != null) {
+                mCommentList.getResults().clear();
                 mCommentList.getResults().addAll(data.getResults());
             }
 
@@ -297,20 +294,6 @@ public class HomeFragment extends BaseLoadingFragment {
 
     public interface OnProductListListener {
         void onItemClick(int position);
-    }
-
-    private ArrayList<Comment> getProductComment(Product product) {
-        ArrayList<Comment> listComment = new ArrayList<>();
-        for (Comment comment : mCommentList.getResults()) {
-            try {
-                if (product.getObjectId().equals(comment.getProductID().getObjectId())) {
-                    listComment.add(comment);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return listComment;
     }
 
 

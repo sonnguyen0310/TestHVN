@@ -78,10 +78,12 @@
             android:inputType="number"
             android:singleLine="true"
             android:visibility="gone"/>
+
         <android.support.v7.widget.AppCompatRatingBar
             android:id="@+id/rb_Rating"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:numStars="5"/>
     </LinearLayout>
