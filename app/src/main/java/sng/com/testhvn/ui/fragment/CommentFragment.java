@@ -148,25 +148,6 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     public void onStart() {
         super.onStart();
         Log.d(TAG, "onStart: ");
-        if (mListProduct != null) {
-            setAutoCompleteAdapter();
-        }
-        if (mProductID != null) {
-            mEdtProductId.setText(mProductID);
-        }
-        if (mProduct != null) {
-            mEdtProductId.setText(mProduct.getObjectId());
-            mTvProductName.setText(mProduct.getProductName());
-            setEnableView();
-        }
-//        mEdtProductId.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (hasFocus){
-//                    mEdtProductId.addTextChangedListener(mTextWatcher);
-//                }
-//            }
-//        });
 
         mTextWatcher = new TextWatcher() {
             private Timer timer = new Timer();
@@ -204,6 +185,17 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     @Override
     public void onResume() {
         super.onResume();
+        if (mListProduct != null) {
+            setAutoCompleteAdapter();
+        }
+//        if (mProductID != null) {
+//            mEdtProductId.setText(mProductID);
+//        }
+        if (mProduct != null) {
+            mEdtProductId.setText(mProduct.getObjectId());
+            mTvProductName.setText(mProduct.getProductName());
+            setEnableView();
+        }
         if (getActivity() instanceof HomeActivity) {
             ((HomeActivity) getActivity()).mFabMenu.setVisibility(View.GONE);
         }
@@ -217,6 +209,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
             getLoaderManager().restartLoader(LOADER_GET_ALL_PRODUCT, null, mCbLoadAllProduct);
         } else {
             setAutoCompleteAdapter();
+            mEdtProductId.setText(mProductID);
             if (mListUser == null) {
                 getLoaderManager().restartLoader(LOADER_GET_ALL_USER, null, mUserResultLoaderCallbacks);
             }
@@ -399,7 +392,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
                         Toast.makeText(getContext(), getString(R.string.qrcode_camera_not_found), Toast.LENGTH_LONG).show();
                         break;
                     } else {
-                        mEdtProductId.setText(data.getStringExtra(QrScanActivity.QR_CODE_RESULT_SUCCESS));
+                        mProductID = data.getStringExtra(QrScanActivity.QR_CODE_RESULT_SUCCESS);
                     }
                 }
                 break;
@@ -439,8 +432,13 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
 
         @Override
         public void onLoadFinished(Loader<UserResult> loader, UserResult data) {
-            mListUser = (ArrayList) data.getResults();
-            showContent();
+            if (data != null) {
+                mListUser = (ArrayList) data.getResults();
+                showContent();
+            } else {
+                Log.e(TAG, "onLoadFinished: data null");
+            }
+
         }
 
         @Override
@@ -458,9 +456,14 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
 
         @Override
         public void onLoadFinished(Loader<ProductResult> loader, ProductResult data) {
-            mListProduct = (ArrayList) data.getResults();
-            setAutoCompleteAdapter();
-            getLoaderManager().restartLoader(LOADER_GET_ALL_USER, null, mUserResultLoaderCallbacks);
+            if (data != null) {
+                mListProduct = (ArrayList) data.getResults();
+                setAutoCompleteAdapter();
+                mEdtProductId.setText(mProductID);
+                getLoaderManager().restartLoader(LOADER_GET_ALL_USER, null, mUserResultLoaderCallbacks);
+            } else {
+                Log.e(TAG, "onLoadFinished: data null");
+            }
             showContent();
         }
 
@@ -482,13 +485,24 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
 
         @Override
         public void onLoadFinished(Loader<Response> loader, Response data) {
-            if (Utils.toJson(data).toString().contains("createdAt") && Utils.toJson(data).toString().contains("createdAt")) {
-                Utils.saveCommentToPrefrence(getContext(), mPostReview);
-                mHandler.sendEmptyMessageDelayed(SUCCESS, 100);
-            } else {
-                Toast.makeText(getContext(), getString(R.string.comment_error_post), Toast.LENGTH_LONG);
-            }
             showContent();
+            if (data != null) {
+                if (Utils.toJson(data).toString().contains("createdAt") && Utils.toJson(data).toString().contains("createdAt")) {
+                    Utils.saveCommentToPrefrence(getContext(), mPostReview);
+                    mHandler.sendEmptyMessageDelayed(SUCCESS, 100);
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.comment_error_post), Toast.LENGTH_LONG);
+                }
+            } else {
+                setDialogText(getString(R.string.global_error), getString(R.string.global_try_again), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+            }
+
+
         }
 
         @Override

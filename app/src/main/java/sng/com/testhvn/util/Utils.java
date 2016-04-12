@@ -2,10 +2,13 @@ package sng.com.testhvn.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,7 +48,7 @@ public class Utils {
     }
 
     public static void saveCommentToPrefrence(Context context, PostReview data) {
-
+        JsonArray jsonArray = new JsonArray();
         JsonObject userID = new JsonObject();
         userID.addProperty("__type", "Pointer");
         userID.addProperty("className", "User");
@@ -64,10 +67,21 @@ public class Utils {
 
         obj.add("productID", productID);
         obj.add("userID", userID);
-        savePreference(context, data.getProductID().getObjectId(), obj.toString());
+        JsonParser jsonParser = new JsonParser();
+        Log.d("sonnguyen", "saveCommentToPrefrence: " + readPreference(context, data.getProductID().getObjectId()));
+        if (readPreference(context, data.getProductID().getObjectId()) != null) {
+            try {
+                JsonArray tmpArr = (JsonArray) jsonParser.parse(readPreference(context, data.getProductID().getObjectId()));
+                jsonArray.addAll(tmpArr);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        jsonArray.add(obj);
+        savePreference(context, data.getProductID().getObjectId(), jsonArray.toString());
     }
 
-    public static Comment getReview(Context context, String productId) {
+    public static ArrayList<Comment> getReview(Context context, String productId) {
         if (productId == null) {
             return null;
         }
@@ -76,8 +90,14 @@ public class Utils {
             return null;
         }
         Gson gson = new Gson();
-        Comment comment = gson.fromJson(jsString, Comment.class);
-        return comment;
+        ArrayList<Comment> list = new ArrayList<>();
+        try {
+            list = gson.fromJson(jsString, new TypeToken<ArrayList<Comment>>() {
+            }.getType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     public static ArrayList<Comment> getProductComment(Product product, ArrayList<Comment> commentResult) {

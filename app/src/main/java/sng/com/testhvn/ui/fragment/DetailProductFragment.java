@@ -1,6 +1,7 @@
 package sng.com.testhvn.ui.fragment;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -94,6 +95,7 @@ public class DetailProductFragment extends BaseLoadingFragment {
     TextView mTvColor;
     @Bind(R.id.recycler)
     RecyclerView mRecyclerView;
+
     @Override
     public View onCreateContentView(LayoutInflater inflater, ViewGroup container,
                                     Bundle savedInstanceState) {
@@ -160,10 +162,20 @@ public class DetailProductFragment extends BaseLoadingFragment {
 
         @Override
         public void onLoadFinished(Loader<UserResult> loader, UserResult data) {
-            setmListUser((ArrayList) data.getResults());
-            Log.d("sonnguyen", "onLoadFinished: <<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>" + mListComment.size());
-            mReviewAdapter.setData(mListComment, (ArrayList) data.getResults());
-            mRecyclerView.setAdapter(mReviewAdapter);
+            if (data != null) {
+                setmListUser((ArrayList) data.getResults());
+                Log.d("sonnguyen", "onLoadFinished: <<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>" + mListComment.size());
+                mReviewAdapter.setData(mListComment, (ArrayList) data.getResults());
+                mRecyclerView.setAdapter(mReviewAdapter);
+            } else {
+                setDialogText(getString(R.string.global_error), getString(R.string.global_try_again), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getLoaderManager().restartLoader(LOADER_GET_ALL_USER, null, mUserResultLoaderCallbacks);
+                    }
+                });
+            }
+
         }
 
         @Override

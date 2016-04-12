@@ -48,7 +48,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewHolder> {
         }
         if (comments != null) {
             if (Utils.getReview(mContext, mProductId) != null) {
-                comments.add(Utils.getReview(mContext, mProductId));
+                comments.addAll(Utils.getReview(mContext, mProductId));
             }
             mCommentList.addAll(sortList(comments));
         }

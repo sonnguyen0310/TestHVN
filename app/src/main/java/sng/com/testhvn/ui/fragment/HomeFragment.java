@@ -76,6 +76,7 @@ public class HomeFragment extends BaseLoadingFragment {
             mBrandList = getArguments().getParcelableArrayList(ARG_LIST_BRAND);
             mSelectedBrand = getArguments().getInt(ARG_BRAND_SELECTED);
         }
+        getLoaderManager().restartLoader(LOADER_GET_ALL_COMMENT, null, mCbLoadAllComment);
         showLoading();
         mCommentList = new CommentResult();
     }
@@ -115,7 +116,7 @@ public class HomeFragment extends BaseLoadingFragment {
         super.onStart();
         Log.d(TAG, "onStart: ");
         onUpdateBrand();
-        getLoaderManager().restartLoader(LOADER_GET_ALL_COMMENT, null, mCbLoadAllComment);
+
         mOnProductListener = new OnProductListListener() {
             @Override
             public void onItemClick(int position) {
@@ -256,6 +257,7 @@ public class HomeFragment extends BaseLoadingFragment {
 
         @Override
         public Loader<ProductResult> onCreateLoader(int id, Bundle args) {
+            Log.d(TAG, "onCreateLoader: mCbLoadProducByBrand");
             showLoading();
             brandId = args.getString(BRAND_ID);
             Log.d(TAG, "onCreateLoader: mCbLoadProducByBrand" + brandId);
