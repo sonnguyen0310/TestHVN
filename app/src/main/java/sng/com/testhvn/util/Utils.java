@@ -10,6 +10,9 @@ import com.google.gson.JsonParser;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import retrofit.client.Response;
 import sng.com.testhvn.model.Comment;
@@ -39,7 +42,7 @@ public class Utils {
         }
     }
 
-    public void saveCommentToPrefrence(Context context, PostReview data) {
+    public static void saveCommentToPrefrence(Context context, PostReview data) {
 
         JsonObject userID = new JsonObject();
         userID.addProperty("__type", "Pointer");
@@ -54,12 +57,18 @@ public class Utils {
         JsonObject obj = new JsonObject();
         obj.addProperty("comment", data.getComment());
         obj.addProperty("rating", data.getRating());
+        obj.addProperty("createdAt", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH).format(new Date()));
+        obj.addProperty("updatedAt", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH).format(new Date()));
+
         obj.add("productID", productID);
         obj.add("userID", userID);
         savePreference(context, data.getProductID().getObjectId(), obj.toString());
     }
 
-    public Comment getReview(Context context, String productId) {
+    public static Comment getReview(Context context, String productId) {
+        if (productId == null) {
+            return null;
+        }
         String jsString = readPreference(context, productId);
         if (jsString.length() == 0) {
             return null;

@@ -87,7 +87,11 @@ public class DetailProductFragment extends BaseLoadingFragment {
             }
             mListProduct = getArguments().getParcelableArrayList(ARG_PRODUCT_LIST);
         }
-        mReviewAdapter = new ReviewAdapter(getContext());
+        if (mProductResult != null) {
+            mReviewAdapter = new ReviewAdapter(getContext(), mProductResult.getObjectId());
+        } else {
+            mReviewAdapter = new ReviewAdapter(getContext(), null);
+        }
     }
 
     @Override
@@ -123,21 +127,6 @@ public class DetailProductFragment extends BaseLoadingFragment {
         if (!getUserVisibleHint()) {
             return;
         }
-//        if (getActivity() instanceof HomeActivity) {
-//            ((HomeActivity) getActivity()).btnAddReview.setVisibility(View.VISIBLE);
-//            ((HomeActivity) getActivity()).btnAddReview.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    try {
-//                        CommentFragment fragment = CommentFragment.newInstance(mListProduct, mListUser, mProductResult, null);
-//                        getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(CommentFragment.TAG).replace(R.id.fragment_container, fragment).commit();
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                }
-//            });
-//        }
     }
 
     @Override
@@ -173,13 +162,6 @@ public class DetailProductFragment extends BaseLoadingFragment {
         mListUser.addAll(list);
     }
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (getActivity() instanceof HomeActivity) {
-//            ((HomeActivity) getActivity()).onDefaultFabClick();
-//        }
-//    }
 
     private final LoaderManager.LoaderCallbacks<CommentResult> mCbLoadAllComment = new LoaderManager.LoaderCallbacks<CommentResult>() {
         @Override

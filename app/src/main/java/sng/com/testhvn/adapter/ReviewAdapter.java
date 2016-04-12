@@ -20,6 +20,7 @@ import sng.com.testhvn.R;
 import sng.com.testhvn.model.Comment;
 import sng.com.testhvn.model.user.User;
 import sng.com.testhvn.util.LogUtils;
+import sng.com.testhvn.util.Utils;
 
 /**
  * Created by son.nguyen on 3/20/2016.
@@ -28,9 +29,11 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewHolder> {
     private ArrayList<Comment> mCommentList;
     private Context mContext;
     private ArrayList<User> mListUser;
+    private String mProductId;
 
-    public ReviewAdapter(Context context) {
+    public ReviewAdapter(Context context, String productId) {
         mContext = context;
+        mProductId = productId;
     }
 
     public void setData(ArrayList<Comment> comments, ArrayList<User> listUser) {
@@ -40,11 +43,14 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewHolder> {
         if (null == mListUser) {
             mListUser = new ArrayList<>();
         }
-        if (listUser!=null){
+        if (listUser != null) {
             mListUser.clear();
             mListUser.addAll(listUser);
         }
-        if (comments!=null){
+        if (comments != null) {
+            if (Utils.getReview(mContext, mProductId) != null) {
+                comments.add(Utils.getReview(mContext, mProductId));
+            }
             mCommentList.clear();
             mCommentList.addAll(sortList(comments));
         }
@@ -78,7 +84,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewHolder> {
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
             return df.format(formatDate(data));
         } catch (Exception e) {
-            LogUtils.d("sonnguyen", ">>>>>>>  : " +e);
+            LogUtils.d("sonnguyen", ">>>>>>>  : " + e);
             e.printStackTrace();
             return data;
         }
@@ -137,7 +143,7 @@ class ReviewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setData(User user, Comment comment) {
-        if (user == null || comment == null ){
+        if (user == null || comment == null) {
             return;
         }
         mTvName.setText("" + user.getUserName());

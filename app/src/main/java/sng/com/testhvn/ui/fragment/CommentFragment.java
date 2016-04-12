@@ -180,7 +180,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
 
             @Override
             public void onTextChanged(final CharSequence s, int start, int before, int count) {
-                if (mEdtProductId.isFocused()){
+                if (mEdtProductId.isFocused()) {
                     timer.cancel();
                     timer = new Timer();
                     timer.schedule(
@@ -366,8 +366,8 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
                     if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
                         Intent intent = new Intent(getActivity(), QrScanActivity.class);
                         startActivityForResult(intent, ACTIVITY_RESULT_QR_CODE);
-                    }else {
-                        Toast.makeText(getContext(),"sorry, the device do not have the camera",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "sorry, the device do not have the camera", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
@@ -472,15 +472,19 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     };
 
     private final LoaderManager.LoaderCallbacks<Response> mPostReviewLoaderCallBack = new LoaderManager.LoaderCallbacks<Response>() {
+        PostReview mPostReview;
+
         @Override
         public Loader<Response> onCreateLoader(int id, Bundle args) {
             showLoading();
-            return new PostCommentLoader(getContext(), (PostReview) args.getParcelable(ARG_POST_REVIEW));
+            mPostReview = (PostReview) args.getParcelable(ARG_POST_REVIEW);
+            return new PostCommentLoader(getContext(), mPostReview);
         }
 
         @Override
         public void onLoadFinished(Loader<Response> loader, Response data) {
             if (Utils.toJson(data).toString().contains("createdAt") && Utils.toJson(data).toString().contains("createdAt")) {
+                Utils.saveCommentToPrefrence(getContext(), mPostReview);
                 mHandler.sendEmptyMessageDelayed(SUCCESS, 100);
             } else {
                 Toast.makeText(getContext(), getString(R.string.comment_error_post), Toast.LENGTH_LONG);
