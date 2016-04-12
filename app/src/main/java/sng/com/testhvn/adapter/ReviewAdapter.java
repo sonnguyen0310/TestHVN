@@ -142,7 +142,7 @@ class ReviewHolder extends RecyclerView.ViewHolder {
         }
         mTvName.setText("" + user.getUserName());
         mTvDate.setText("" + mReviewAdapter.newDateFormat(comment.getUpdatedAt()));
-        mTvRating.setText("" + comment.getRating());
+        mTvRating.setText("" + comment.getRating() / 2);
         mTvComment.setText("" + comment.getComment());
     }
 }

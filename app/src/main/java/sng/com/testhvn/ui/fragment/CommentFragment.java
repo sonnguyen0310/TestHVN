@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.speech.RecognizerIntent;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.AppCompatRatingBar;
@@ -222,6 +221,14 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
             if (mListUser == null) {
                 getLoaderManager().restartLoader(LOADER_GET_ALL_USER, null, mUserResultLoaderCallbacks);
             }
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (getActivity() instanceof HomeActivity) {
+            ((HomeActivity) getActivity()).mFabMenu.setVisibility(View.VISIBLE);
         }
     }
 
@@ -494,8 +501,8 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
                 setDialogText(getString(R.string.comment_success), "ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Fragment fragment = new HomeFragment();
-                        replaceFragmmentWithStack(fragment, HomeFragment.TAG);
+                        getFragmentManager().popBackStack();
+                        dialog.dismiss();
                     }
                 });
 

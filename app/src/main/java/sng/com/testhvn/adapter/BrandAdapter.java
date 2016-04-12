@@ -32,6 +32,7 @@ public class BrandAdapter extends BaseAdapter {
             mList = new ArrayList<>();
         }
         if (list != null) {
+            mList.clear();
             mList.addAll(list);
         }
         notifyDataSetChanged();
