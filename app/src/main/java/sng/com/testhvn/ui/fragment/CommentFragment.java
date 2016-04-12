@@ -3,6 +3,7 @@ package sng.com.testhvn.ui.fragment;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -227,9 +228,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     @Override
     public void onPause() {
         super.onPause();
-        if (getActivity() instanceof HomeActivity) {
-            ((HomeActivity) getActivity()).mFabMenu.setVisibility(View.VISIBLE);
-        }
+
     }
 
     private void setEnableView() {
@@ -355,8 +354,15 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
                 break;
             case R.id.btn_qr_scan:
                 try {
-                    Intent intent = new Intent(getActivity(), QrScanActivity.class);
-                    startActivityForResult(intent, ACTIVITY_RESULT_QR_CODE);
+                    PackageManager pm = getContext().getPackageManager();
+
+                    if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                        Intent intent = new Intent(getActivity(), QrScanActivity.class);
+                        startActivityForResult(intent, ACTIVITY_RESULT_QR_CODE);
+                    }else {
+                        Toast.makeText(getContext(),"sorry, the device do not have the camera",Toast.LENGTH_SHORT).show();
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
