@@ -22,6 +22,7 @@ public abstract class BaseLoadingFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         progress = ProgressDialog.show(getContext(), "Loading",
                 "Please wait", true);
+//        progress.setProgressStyle(android.R.style.Theme_Holo_NoActionBar_Fullscreen);
         progress.setCanceledOnTouchOutside(false);
         progress.setCancelable(true);
     }
