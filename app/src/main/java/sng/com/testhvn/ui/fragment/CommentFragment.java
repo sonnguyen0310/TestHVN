@@ -75,6 +75,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     private Product mProduct;
     private User mUser;
     private ArrayAdapter<String> mProductAutoAdapter;
+    private ArrayAdapter<String> mEmailAutoAdapter;
     private String mProductID;
     private TextWatcher mTextWatcher;
 
@@ -117,7 +118,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     @Bind(R.id.edt_comment)
     EditText mEdtComment;
     @Bind(R.id.edt_email)
-    EditText mEdtEmail;
+    AutoCompleteTextView mEdtEmail;
     @Bind(R.id.rb_Rating)
     AppCompatRatingBar mRatingBar;
     @Bind(R.id.edt_product_id)
@@ -185,12 +186,9 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     @Override
     public void onResume() {
         super.onResume();
-        if (mListProduct != null) {
+        if (mListUser != null) {
             setAutoCompleteAdapter();
         }
-//        if (mProductID != null) {
-//            mEdtProductId.setText(mProductID);
-//        }
         if (mProduct != null) {
             mProductID = mProduct.getObjectId();
             mTvProductName.setText(mProduct.getProductName());
@@ -208,7 +206,6 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         if (null == mListProduct && null == mListUser) {
             getLoaderManager().restartLoader(LOADER_GET_ALL_PRODUCT, null, mCbLoadAllProduct);
         } else {
-            setAutoCompleteAdapter();
             mEdtProductId.setText(mProductID);
             if (mListUser == null) {
                 getLoaderManager().restartLoader(LOADER_GET_ALL_USER, null, mUserResultLoaderCallbacks);
@@ -252,6 +249,14 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         return list;
     }
 
+    private List<String> getListEmail() {
+        if (mListUser == null) return null;
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < mListUser.size(); i++) {
+            list.add(mListUser.get(i).getEmail());
+        }
+        return list;
+    }
     private void checkProduct(final String productId) {
         if (null == mListProduct) {
             return;
@@ -400,11 +405,18 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     }
 
     private void setAutoCompleteAdapter() {
-        List<String> list = getListProductID();
-        mProductAutoAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, list);
-        mEdtProductId.setAdapter(mProductAutoAdapter);
-        mEdtProductId.setThreshold(1);
-        mProductAutoAdapter.notifyDataSetChanged();
+//        List<String> listProductID = getListProductID();
+//        mProductAutoAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, listProductID);
+//        mEdtProductId.setAdapter(mProductAutoAdapter);
+//        mEdtProductId.setThreshold(1);
+//        mProductAutoAdapter.notifyDataSetChanged();
+
+        List<String> listEmail = getListEmail();
+        if (listEmail == null) return;
+        mEmailAutoAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, listEmail);
+        mEdtEmail.setAdapter(mEmailAutoAdapter);
+        mEdtEmail.setThreshold(1);
+        mEmailAutoAdapter.notifyDataSetChanged();
     }
 
     private void promptSpeechInput() {
@@ -434,6 +446,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         public void onLoadFinished(Loader<UserResult> loader, UserResult data) {
             if (data != null) {
                 mListUser = (ArrayList) data.getResults();
+                setAutoCompleteAdapter();
                 showContent();
             } else {
                 Log.e(TAG, "onLoadFinished: data null");
