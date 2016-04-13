@@ -12,8 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -87,15 +89,16 @@ public class DetailProductFragment extends BaseLoadingFragment {
     TextView mTvDescripton;
     @Bind(R.id.tv_name)
     TextView mTvName;
-    @Bind(R.id.tv_price)
-    TextView mTvPrice;
+    @Bind(R.id.tv_average_rating)
+    TextView mTvAverage;
     @Bind(R.id.tv_stock)
     TextView mTvStock;
     @Bind(R.id.tv_color)
     TextView mTvColor;
     @Bind(R.id.recycler)
     RecyclerView mRecyclerView;
-
+    @Bind(R.id.ln_average)
+    LinearLayout mLnAvaerage;
     @Override
     public View onCreateContentView(LayoutInflater inflater, ViewGroup container,
                                     Bundle savedInstanceState) {
@@ -114,6 +117,8 @@ public class DetailProductFragment extends BaseLoadingFragment {
     @Override
     public void onResume() {
         super.onResume();
+        mTvAverage.setText("");
+        mLnAvaerage.setVisibility(View.GONE);
         if (getArguments() != null) {
             if (mListComment == null) {
                 mListComment = new ArrayList<>();
@@ -138,7 +143,6 @@ public class DetailProductFragment extends BaseLoadingFragment {
         }
         showContent();
         mTvName.setText("" + mProductResult.getProductName());
-        mTvPrice.setText("" + mProductResult.getPrice() + "$");
         mTvDescripton.setText("" + mProductResult.getDescription());
         mTvStock.setText(getString(R.string.product_status) + mProductResult.getAvailabilityStatus());
         mTvColor.setText(getString(R.string.product_color) + mProductResult.getColour());
@@ -164,8 +168,7 @@ public class DetailProductFragment extends BaseLoadingFragment {
         public void onLoadFinished(Loader<UserResult> loader, UserResult data) {
             if (data != null) {
                 setmListUser((ArrayList) data.getResults());
-                Log.d("sonnguyen", "onLoadFinished: <<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>" + mListComment.size());
-                mReviewAdapter.setData(mListComment, (ArrayList) data.getResults());
+                setDataReviewAdapter((ArrayList<User>) data.getResults());
                 mRecyclerView.setAdapter(mReviewAdapter);
             } else {
                 setDialogText(getString(R.string.global_error), getString(R.string.global_try_again), new DialogInterface.OnClickListener() {
@@ -207,7 +210,7 @@ public class DetailProductFragment extends BaseLoadingFragment {
             }
             mListComment.clear();
             mListComment.addAll(Utils.getProductComment(mProductResult, (ArrayList<Comment>) data.getResults()));
-            mReviewAdapter.setData(mListComment, mListUser);
+            setDataReviewAdapter(mListUser);
             mRecyclerView.setAdapter(mReviewAdapter);
             showContent();
         }
@@ -245,5 +248,31 @@ public class DetailProductFragment extends BaseLoadingFragment {
 
     public void setmProductResult(Product mProductResult) {
         this.mProductResult = mProductResult;
+    }
+
+    private void setDataReviewAdapter(ArrayList<User> listUser) {
+        if (Utils.getReview(getContext(), mProductResult.getObjectId()) != null) {
+            mListComment.addAll(Utils.getReview(getContext(), mProductResult.getObjectId()));
+        }
+        Log.d("sonnguyen", "onLoadFinished: <<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>" + mListComment.size());
+        setTvAverage();
+        mReviewAdapter.setData(mListComment, listUser);
+    }
+
+    private void setTvAverage() {
+        if (mListComment.size() == 0) return;
+        int total = 0;
+        for (int i = 0; i < mListComment.size(); i++) {
+            try {
+                total = total + mListComment.get(i).getRating();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        double result = (double) total / (mListComment.size() * 2.0);
+
+        DecimalFormat df = new DecimalFormat("#.#");
+        mTvAverage.setText(df.format(result) + "");
+        mLnAvaerage.setVisibility(View.VISIBLE);
     }
 }
