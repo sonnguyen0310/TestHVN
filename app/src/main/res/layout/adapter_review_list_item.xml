@@ -52,7 +52,6 @@
                     android:layout_toRightOf="@+id/tv_user_name"
                     android:gravity="right"
                     android:maxLines="1"
-                    android:text="date"
                     android:textStyle="bold"/>
             </RelativeLayout>
 
