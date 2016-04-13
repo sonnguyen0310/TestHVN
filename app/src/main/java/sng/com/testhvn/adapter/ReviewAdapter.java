@@ -21,7 +21,6 @@ import sng.com.testhvn.R;
 import sng.com.testhvn.model.Comment;
 import sng.com.testhvn.model.user.User;
 import sng.com.testhvn.util.LogUtils;
-import sng.com.testhvn.util.Utils;
 
 /**
  * Created by son.nguyen on 3/20/2016.
@@ -47,9 +46,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewHolder> {
             mListUser.addAll(listUser);
         }
         if (comments != null) {
-            if (Utils.getReview(mContext, mProductId) != null) {
-                comments.addAll(Utils.getReview(mContext, mProductId));
-            }
             mCommentList.addAll(sortList(comments));
         }
 
