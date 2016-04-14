@@ -26,4 +26,10 @@
     <string name="global_try_again">Try again</string>
     <string name="app_id">MlR6vYpYvLRxfibxE5cg0e73jXojL6jWFqXU6F8L</string>
     <string name="api_key">7BTXVX1qUXKUCnsngL8LxhpEHKQ8KKd798kKpD9W</string>
+
+
+    <string name="permissions_not_granted">Permissions were not granted.</string>
+    <string name="permission_camera_rationale">Camera permission is needed to show the camera preview.</string>
+    <string name="permision_available_camera">Camera Permission has been granted. Preview can now be opened.</string>
+    <string name="ok">OK</string>
 </resources>

@@ -1,5 +1,6 @@
 package sng.com.testhvn.ui.fragment;
 
+import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,6 +9,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.speech.RecognizerIntent;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.AppCompatRatingBar;
@@ -49,7 +52,7 @@ import sng.com.testhvn.ui.activity.HomeActivity;
 import sng.com.testhvn.ui.activity.ScanActivity;
 import sng.com.testhvn.util.Utils;
 
-public class CommentFragment extends BaseLoadingFragment implements View.OnClickListener {
+public class CommentFragment extends BaseLoadingFragment implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
     public static final String TAG = "CommentFragment";
     private static final String ARG_LIST_PRODUCT = "param1";
     private static final String ARG_LIST_USER = "param2";
@@ -63,7 +66,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     private static final int SUCCESS = 1;
     public static final int ACTIVITY_RESULT_VOICE_CODE = 100;
     public static final int ACTIVITY_RESULT_QR_CODE = 101;
-
+    private static final int REQUEST_CAMERA = 2;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -228,7 +231,26 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     @Override
     public void onPause() {
         super.onPause();
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CAMERA) {
+            // BEGIN_INCLUDE(permission_result)
+            // Received permission result for camera permission.
+            Log.i(TAG, "Received response for Camera permission request.");
+
+            // Check if the only required permission has been granted
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Camera permission has been granted, preview can be displayed
+                Log.i(TAG, "CAMERA permission has now been granted. Showing preview.");
+                onQrClick();
+            }
+
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     private void setEnableView() {
@@ -363,24 +385,38 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
                 promptSpeechInput();
                 break;
             case R.id.btn_qr_scan:
-                try {
-                    PackageManager pm = getContext().getPackageManager();
-
-                    if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-                        Intent intent = new Intent(getActivity(), ScanActivity.class);
-                        startActivityForResult(intent, ACTIVITY_RESULT_QR_CODE);
-                    } else {
-                        Toast.makeText(getContext(), "sorry, the device do not have the camera", Toast.LENGTH_SHORT).show();
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                onQrClick();
                 break;
             case R.id.tv_product_name:
                 DetailProductFragment fragment = DetailProductFragment.newInstance(mListProduct, mProduct, null);
                 replaceFragmmentWithStack(fragment, DetailProductFragment.TAG);
                 break;
+        }
+    }
+
+    private void onQrClick() {
+        try {
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) {
+                // Camera permission has not been granted.
+                if (getActivity() instanceof HomeActivity) {
+                    ((HomeActivity) getActivity()).requestCameraPermission();
+                }
+            } else {
+                // Camera permissions is already available, show the camera preview.
+                Log.i(TAG,
+                        "CAMERA permission has already been granted. Displaying camera preview.");
+                PackageManager pm = getContext().getPackageManager();
+                if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                    Intent intent = new Intent(getActivity(), ScanActivity.class);
+                    startActivityForResult(intent, ACTIVITY_RESULT_QR_CODE);
+                } else {
+                    Toast.makeText(getContext(), "sorry, the device do not have the camera", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
