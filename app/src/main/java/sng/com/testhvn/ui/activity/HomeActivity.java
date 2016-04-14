@@ -130,7 +130,8 @@ public class HomeActivity extends BaseActivity {
     void onClickQRScan() {
         mFabMenu.collapse();
         try {
-            Intent intent = new Intent(HomeActivity.this, QrScanActivity.class);
+//            Intent intent = new Intent(HomeActivity.this, QrScanActivity.class);
+            Intent intent = new Intent(HomeActivity.this, ScanActivity.class);
             startActivityForResult(intent, ACTIVITY_RESULT_QR_CODE);
         } catch (Exception e) {
             e.printStackTrace();
