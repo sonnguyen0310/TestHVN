@@ -59,7 +59,7 @@ public class HomeActivity extends BaseActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("sonnguyen", "onActivityResult: resultCode: " + resultCode + " / " + RESULT_OK + " / " + requestCode);
+        Log.d("sonnguyen", "----------HomeActivity-------onActivityResult: resultCode: " + resultCode + " / " + RESULT_OK + " / " + requestCode);
         switch (requestCode) {
             case ACTIVITY_RESULT_VOICE_CODE:
                 if (resultCode == RESULT_OK && null != data) {

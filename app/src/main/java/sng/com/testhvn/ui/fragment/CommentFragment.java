@@ -61,8 +61,8 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     private static final int LOADER_GET_ALL_PRODUCT = 1;
     private static final int LOADER_POST_COMMENT = 2;
     private static final int SUCCESS = 1;
-    private static final int ACTIVITY_RESULT_VOICE_CODE = 100;
-    private static final int ACTIVITY_RESULT_QR_CODE = 101;
+    public static final int ACTIVITY_RESULT_VOICE_CODE = 100;
+    public static final int ACTIVITY_RESULT_QR_CODE = 101;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -192,6 +192,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
             setAutoCompleteAdapter();
         }
         if (mProduct != null) {
+            Log.d(TAG, "onResume: mProduct != null");
             mProductID = mProduct.getObjectId();
             mTvProductName.setText(mProduct.getProductName());
             setEnableView();
@@ -205,6 +206,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Log.d(TAG, "onResume: " + mProductID);
         if (null == mListProduct && null == mListUser) {
             getLoaderManager().restartLoader(LOADER_GET_ALL_PRODUCT, null, mCbLoadAllProduct);
         } else {
@@ -264,6 +266,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         if (null == mListProduct) {
             return;
         }
+        mProduct = null;
         final String newProductID = Utils.resultTTS(productId);
         for (int i = 0; i < mListProduct.size(); i++) {
             if (mListProduct.get(i).getObjectId().toLowerCase().equals(newProductID.toLowerCase())) {
@@ -384,15 +387,16 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: resultCode: " + resultCode + " / " + getActivity().RESULT_OK + " / " + requestCode);
+        Log.d("sonnguyen", "onActivityResult: >>>>COMMENT FRAGMENT<<<<<<<<<resultCode: " + resultCode + " / " + getActivity().RESULT_OK + " / " + requestCode);
         switch (requestCode) {
             case ACTIVITY_RESULT_VOICE_CODE:
                 if (resultCode == getActivity().RESULT_OK && null != data) {
 
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    mProductID = result.get(0);
-                    mEdtProductId.setText(result.get(0));
+                    mProductID = Utils.resultTTS(result.get(0));
+                    Log.d(TAG, "onActivityResult: voice: " + mProductID);
+                    checkProduct(mProductID);
                 }
                 break;
             case ACTIVITY_RESULT_QR_CODE:
@@ -402,6 +406,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
                         break;
                     } else {
                         mProductID = data.getStringExtra(ScanActivity.QR_CODE_RESULT_SUCCESS);
+                        Log.d(TAG, "onActivityResult: qr " + mProductID);
                         mEdtProductId.setText(mProductID);
                         checkProduct(mProductID);
                     }
