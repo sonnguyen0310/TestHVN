@@ -46,7 +46,7 @@ import sng.com.testhvn.service.apiRequestModel.PostReview;
 import sng.com.testhvn.service.apiRequestModel.ProductResult;
 import sng.com.testhvn.service.apiRequestModel.UserResult;
 import sng.com.testhvn.ui.activity.HomeActivity;
-import sng.com.testhvn.ui.activity.QrScanActivity;
+import sng.com.testhvn.ui.activity.ScanActivity;
 import sng.com.testhvn.util.Utils;
 
 public class CommentFragment extends BaseLoadingFragment implements View.OnClickListener {
@@ -101,12 +101,44 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: ");
         if (getArguments() != null) {
             mListProduct = getArguments().getParcelableArrayList(ARG_LIST_PRODUCT);
             mListUser = getArguments().getParcelableArrayList(ARG_LIST_USER);
             mProduct = getArguments().getParcelable(ARG_PRODUCT);
             mProductID = getArguments().getString(ARG_PRODUCT_ID);
         }
+
+        mTextWatcher = new TextWatcher() {
+            private Timer timer = new Timer();
+            private final long DELAY = 500; // milliseconds
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(final CharSequence s, int start, int before, int count) {
+                if (mEdtProductId.isFocused()) {
+                    timer.cancel();
+                    timer = new Timer();
+                    timer.schedule(
+                            new TimerTask() {
+                                @Override
+                                public void run() {
+                                    checkProduct(s.toString());
+                                }
+                            },
+                            DELAY
+                    );
+                }
+            }
+
+            @Override
+            public void afterTextChanged(final Editable s) {
+            }
+        };
     }
 
     @Bind(R.id.btn_qr_scan)
@@ -149,43 +181,13 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     public void onStart() {
         super.onStart();
         Log.d(TAG, "onStart: ");
-
-        mTextWatcher = new TextWatcher() {
-            private Timer timer = new Timer();
-            private final long DELAY = 500; // milliseconds
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(final CharSequence s, int start, int before, int count) {
-                if (mEdtProductId.isFocused()) {
-                    timer.cancel();
-                    timer = new Timer();
-                    timer.schedule(
-                            new TimerTask() {
-                                @Override
-                                public void run() {
-                                    checkProduct(s.toString());
-                                }
-                            },
-                            DELAY
-                    );
-                }
-            }
-
-            @Override
-            public void afterTextChanged(final Editable s) {
-            }
-        };
         mEdtProductId.addTextChangedListener(mTextWatcher);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume: ");
         if (mListUser != null) {
             setAutoCompleteAdapter();
         }
@@ -257,6 +259,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
         }
         return list;
     }
+
     private void checkProduct(final String productId) {
         if (null == mListProduct) {
             return;
@@ -361,7 +364,7 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
                     PackageManager pm = getContext().getPackageManager();
 
                     if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-                        Intent intent = new Intent(getActivity(), QrScanActivity.class);
+                        Intent intent = new Intent(getActivity(), ScanActivity.class);
                         startActivityForResult(intent, ACTIVITY_RESULT_QR_CODE);
                     } else {
                         Toast.makeText(getContext(), "sorry, the device do not have the camera", Toast.LENGTH_SHORT).show();
@@ -381,23 +384,26 @@ public class CommentFragment extends BaseLoadingFragment implements View.OnClick
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("sonnguyen", "onActivityResult: resultCode: " + resultCode + " / " + getActivity().RESULT_OK + " / " + requestCode);
+        Log.d(TAG, "onActivityResult: resultCode: " + resultCode + " / " + getActivity().RESULT_OK + " / " + requestCode);
         switch (requestCode) {
             case ACTIVITY_RESULT_VOICE_CODE:
                 if (resultCode == getActivity().RESULT_OK && null != data) {
 
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    mProductID = result.get(0);
                     mEdtProductId.setText(result.get(0));
                 }
                 break;
             case ACTIVITY_RESULT_QR_CODE:
                 if (resultCode == getActivity().RESULT_OK && null != data) {
-                    if (!TextUtils.isEmpty(data.getStringExtra(QrScanActivity.QR_CODE_RESULT_FAIL))) {
+                    if (!TextUtils.isEmpty(data.getStringExtra(ScanActivity.QR_CODE_RESULT_FAIL))) {
                         Toast.makeText(getContext(), getString(R.string.qrcode_camera_not_found), Toast.LENGTH_LONG).show();
                         break;
                     } else {
-                        mProductID = data.getStringExtra(QrScanActivity.QR_CODE_RESULT_SUCCESS);
+                        mProductID = data.getStringExtra(ScanActivity.QR_CODE_RESULT_SUCCESS);
+                        mEdtProductId.setText(mProductID);
+                        checkProduct(mProductID);
                     }
                 }
                 break;

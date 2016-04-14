@@ -1,6 +1,7 @@
 package sng.com.testhvn.ui.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -14,12 +15,15 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 public class ScanActivity extends Activity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
     private static String TAG = "ScanActivity";
+    private static final int ACTIVITY_RESULT_QR_CODE = 101;
+    public static final String QR_CODE_RESULT_FAIL = "QR_CODE_RESULT_FAIL";
+    public static final String QR_CODE_RESULT_SUCCESS = "QR_CODE_RESULT_SUCCESS";
 
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
-        mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
-        setContentView(mScannerView);                // Set the scanner view as the content view
+        mScannerView = new ZXingScannerView(this);
+        setContentView(mScannerView);
     }
 
     @Override
@@ -37,11 +41,12 @@ public class ScanActivity extends Activity implements ZXingScannerView.ResultHan
 
     @Override
     public void handleResult(Result rawResult) {
-        // Do something with the result here
-        Log.v(TAG, rawResult.getText()); // Prints scan results
-        Log.v(TAG, rawResult.getBarcodeFormat().toString()); // Prints the scan format (qrcode, pdf417 etc.)
-
-        // If you would like to resume scanning, call this method below:
-        mScannerView.resumeCameraPreview(this);
+        Log.v(TAG, rawResult.getText());
+        Log.v(TAG, rawResult.getBarcodeFormat().toString());
+        Intent intent = new Intent();
+        intent.putExtra(QR_CODE_RESULT_SUCCESS, rawResult.getText());
+        setResult(RESULT_OK, intent);
+        finish();
+//        mScannerView.resumeCameraPreview(this);
     }
 }

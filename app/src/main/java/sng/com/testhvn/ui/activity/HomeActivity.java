@@ -23,6 +23,7 @@ import sng.com.testhvn.R;
 import sng.com.testhvn.ui.fragment.CommentFragment;
 import sng.com.testhvn.ui.fragment.DetailProductFragment;
 import sng.com.testhvn.ui.fragment.SplashScreenFragment;
+import sng.com.testhvn.util.Utils;
 
 /**
  * Created by son.nguyen on 3/20/2016.
@@ -65,19 +66,20 @@ public class HomeActivity extends BaseActivity {
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     String productId = result.get(0);
+
                     CommentFragment cmFragment = CommentFragment.newInstance(null,
                             null,
-                            null, productId);
+                            null, Utils.resultTTS(productId));
                     getSupportFragmentManager().beginTransaction().addToBackStack(CommentFragment.TAG).replace(R.id.fragment_container, cmFragment, CommentFragment.TAG).commit();
                 }
                 break;
             case ACTIVITY_RESULT_QR_CODE:
                 if (resultCode == RESULT_OK && null != data) {
-                    if (!TextUtils.isEmpty(data.getStringExtra(QrScanActivity.QR_CODE_RESULT_FAIL))) {
-                        Toast.makeText(getApplicationContext(), data.getStringExtra(QrScanActivity.QR_CODE_RESULT_FAIL), Toast.LENGTH_LONG).show();
+                    if (!TextUtils.isEmpty(data.getStringExtra(ScanActivity.QR_CODE_RESULT_FAIL))) {
+                        Toast.makeText(getApplicationContext(), data.getStringExtra(ScanActivity.QR_CODE_RESULT_FAIL), Toast.LENGTH_LONG).show();
                         break;
                     } else {
-                        String productId = data.getStringExtra(QrScanActivity.QR_CODE_RESULT_SUCCESS);
+                        String productId = data.getStringExtra(ScanActivity.QR_CODE_RESULT_SUCCESS);
                         CommentFragment cmFragment = CommentFragment.newInstance(null,
                                 null,
                                 null, productId);
