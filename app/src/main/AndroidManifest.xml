@@ -23,7 +23,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activity.QrScanActivity"/>
         <activity android:name=".ui.activity.ScanActivity"/>
     </application>
 

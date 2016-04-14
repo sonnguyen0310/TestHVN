@@ -5,16 +5,25 @@ package sng.com.testhvn.ui.fragment;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +65,7 @@ public class HomeFragment extends BaseLoadingFragment {
     private ArrayList<Brand> mBrandList;
     private int mSelectedBrand = -1;
     private OnProductListListener mOnProductListener;
+    private SearchView searchView;
 
     public HomeFragment() {
     }
@@ -72,6 +82,7 @@ public class HomeFragment extends BaseLoadingFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mBrandList = getArguments().getParcelableArrayList(ARG_LIST_BRAND);
             mSelectedBrand = getArguments().getInt(ARG_BRAND_SELECTED);
@@ -81,10 +92,19 @@ public class HomeFragment extends BaseLoadingFragment {
         mCommentList = new CommentResult();
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        this.setHasOptionsMenu(true);
+    }
+
     @Bind(R.id.spn_brand_select)
     AppCompatSpinner mSpinner;
     @Bind(R.id.rc_product_list)
     RecyclerView mRvListProduct;
+    @Bind(R.id.et_search)
+    EditText mEtSearch;
+
     @Override
     public View onCreateContentView(LayoutInflater inflater, ViewGroup container,
                                     Bundle savedInstanceState) {
@@ -102,6 +122,32 @@ public class HomeFragment extends BaseLoadingFragment {
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu, menu);
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d(TAG, "onQueryTextSubmit: " + query);
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mProductListAdapter.getFilter().filter(newText);
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+    }
 
     @Override
     public void onResume() {
@@ -109,6 +155,7 @@ public class HomeFragment extends BaseLoadingFragment {
         if (getActivity() instanceof HomeActivity) {
             ((HomeActivity) getActivity()).mFabMenu.setVisibility(View.VISIBLE);
         }
+        clearSearch();
     }
 
     @Override
@@ -128,6 +175,7 @@ public class HomeFragment extends BaseLoadingFragment {
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                clearSearch();
                 if (null == mBrandList || mBrandList.size() < position) ;
                 if (mBrandList.get(position).getName().equals(getString(R.string.product_all_product))) {
                     getLoaderManager().restartLoader(LOADER_GET_ALL_PRODUCT, null, mCbLoadAllProduct);
@@ -143,6 +191,22 @@ public class HomeFragment extends BaseLoadingFragment {
 
             }
         });
+        mEtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mProductListAdapter.getFilter().filter(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     @Override
@@ -152,12 +216,11 @@ public class HomeFragment extends BaseLoadingFragment {
     }
 
     private void onUpdateBrand() {
-        if(mBrandList == null ||!(mBrandList.size()>0)){
+        if (mBrandList == null || !(mBrandList.size() > 0)) {
             getLoaderManager().restartLoader(LOADER_GET_ALL_BRAND, null, mLoadAllBrandCb);
-        }else {
+        } else {
             mSpinnerAdapter.setData(mBrandList);
-            if (mSelectedBrand != -1)
-            {
+            if (mSelectedBrand != -1) {
                 mSpinner.setSelection(mSelectedBrand);
             }
         }
@@ -298,14 +361,10 @@ public class HomeFragment extends BaseLoadingFragment {
         void onItemClick(int position);
     }
 
+    private void clearSearch() {
+        if (mEtSearch != null) {
+            mEtSearch.setText("");
+        }
+    }
 
-//    private void setDialogText(String mess, String button, DialogInterface.OnClickListener listener) {
-//        if (mBuilder == null) {
-//            mBuilder = new AlertDialog.Builder(getContext());
-//            mBuilder.setMessage(mess)
-//                    .setCancelable(false)
-//                    .setPositiveButton(button, listener);
-//        }
-//        mBuilder.show();
-//    }
 }

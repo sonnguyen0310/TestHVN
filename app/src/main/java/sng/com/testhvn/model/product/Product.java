@@ -13,7 +13,8 @@ import com.google.gson.annotations.SerializedName;
 import sng.com.testhvn.model.DateCreated;
 import sng.com.testhvn.model.brand.BrandID;
 import sng.com.testhvn.model.user.UserID;
-public class Product implements Parcelable{
+
+public class Product implements Parcelable {
 
     @SerializedName("availabilityStatus")
     @Expose
@@ -69,6 +70,9 @@ public class Product implements Parcelable{
         comment = in.readString();
     }
 
+    public Product() {
+    }
+
     public static final Creator<Product> CREATOR = new Creator<Product>() {
         @Override
         public Product createFromParcel(Parcel in) {
@@ -82,252 +86,196 @@ public class Product implements Parcelable{
     };
 
     /**
-     *
-     * @return
-     * The availabilityStatus
+     * @return The availabilityStatus
      */
     public String getAvailabilityStatus() {
         return availabilityStatus;
     }
 
     /**
-     *
-     * @param availabilityStatus
-     * The availabilityStatus
+     * @param availabilityStatus The availabilityStatus
      */
     public void setAvailabilityStatus(String availabilityStatus) {
         this.availabilityStatus = availabilityStatus;
     }
 
     /**
-     *
-     * @return
-     * The brandID
+     * @return The brandID
      */
     public BrandID getBrandID() {
         return brandID;
     }
 
     /**
-     *
-     * @param brandID
-     * The brandID
+     * @param brandID The brandID
      */
     public void setBrandID(BrandID brandID) {
         this.brandID = brandID;
     }
 
     /**
-     *
-     * @return
-     * The colour
+     * @return The colour
      */
     public String getColour() {
         return colour;
     }
 
     /**
-     *
-     * @param colour
-     * The colour
+     * @param colour The colour
      */
     public void setColour(String colour) {
         this.colour = colour;
     }
 
     /**
-     *
-     * @return
-     * The createdAt
+     * @return The createdAt
      */
     public String getCreatedAt() {
         return createdAt;
     }
 
     /**
-     *
-     * @param createdAt
-     * The createdAt
+     * @param createdAt The createdAt
      */
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
     /**
-     *
-     * @return
-     * The dateCreated
+     * @return The dateCreated
      */
     public DateCreated getDateCreated() {
         return dateCreated;
     }
 
     /**
-     *
-     * @param dateCreated
-     * The dateCreated
+     * @param dateCreated The dateCreated
      */
     public void setDateCreated(DateCreated dateCreated) {
         this.dateCreated = dateCreated;
     }
 
     /**
-     *
-     * @return
-     * The description
+     * @return The description
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     *
-     * @param description
-     * The description
+     * @param description The description
      */
     public void setDescription(String description) {
         this.description = description;
     }
 
     /**
-     *
-     * @return
-     * The objectId
+     * @return The objectId
      */
     public String getObjectId() {
         return objectId;
     }
 
     /**
-     *
-     * @param objectId
-     * The objectId
+     * @param objectId The objectId
      */
     public void setObjectId(String objectId) {
         this.objectId = objectId;
     }
 
     /**
-     *
-     * @return
-     * The price
+     * @return The price
      */
     public Integer getPrice() {
         return price;
     }
 
     /**
-     *
-     * @param price
-     * The price
+     * @param price The price
      */
     public void setPrice(Integer price) {
         this.price = price;
     }
 
     /**
-     *
-     * @return
-     * The productName
+     * @return The productName
      */
     public String getProductName() {
         return productName;
     }
 
     /**
-     *
-     * @param productName
-     * The productName
+     * @param productName The productName
      */
     public void setProductName(String productName) {
         this.productName = productName;
     }
 
     /**
-     *
-     * @return
-     * The updatedAt
+     * @return The updatedAt
      */
     public String getUpdatedAt() {
         return updatedAt;
     }
 
     /**
-     *
-     * @param updatedAt
-     * The updatedAt
+     * @param updatedAt The updatedAt
      */
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
 
     /**
-     *
-     * @return
-     * The comment
+     * @return The comment
      */
     public String getComment() {
         return comment;
     }
 
     /**
-     *
-     * @param comment
-     * The comment
+     * @param comment The comment
      */
     public void setComment(String comment) {
         this.comment = comment;
     }
 
     /**
-     *
-     * @return
-     * The productID
+     * @return The productID
      */
     public ProductID getProductID() {
         return productID;
     }
 
     /**
-     *
-     * @param productID
-     * The productID
+     * @param productID The productID
      */
     public void setProductID(ProductID productID) {
         this.productID = productID;
     }
 
     /**
-     *
-     * @return
-     * The rating
+     * @return The rating
      */
     public Integer getRating() {
         return rating;
     }
 
     /**
-     *
-     * @param rating
-     * The rating
+     * @param rating The rating
      */
     public void setRating(Integer rating) {
         this.rating = rating;
     }
 
     /**
-     *
-     * @return
-     * The userID
+     * @return The userID
      */
     public UserID getUserID() {
         return userID;
     }
 
     /**
-     *
-     * @param userID
-     * The userID
+     * @param userID The userID
      */
     public void setUserID(UserID userID) {
         this.userID = userID;

@@ -32,4 +32,6 @@
     <string name="permission_camera_rationale">Camera permission is needed to show the camera preview.</string>
     <string name="permision_available_camera">Camera Permission has been granted. Preview can now be opened.</string>
     <string name="ok">OK</string>
+    <string name="type_name_of_product">Type name of Product</string>
+    <string name="action_search">Search</string>
 </resources>
