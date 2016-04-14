@@ -65,8 +65,8 @@ public class HomeFragment extends BaseLoadingFragment {
     private ArrayList<Brand> mBrandList;
     private int mSelectedBrand = -1;
     private OnProductListListener mOnProductListener;
-    private SearchView searchView;
-
+    private SearchView mSearchView;
+    private MenuItem mItemSearch;
     public HomeFragment() {
     }
 
@@ -126,9 +126,9 @@ public class HomeFragment extends BaseLoadingFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu, menu);
-        MenuItem menuItem = menu.findItem(R.id.action_search);
-        searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        mItemSearch = menu.findItem(R.id.action_search);
+        mSearchView = (SearchView) MenuItemCompat.getActionView(mItemSearch);
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.d(TAG, "onQueryTextSubmit: " + query);
@@ -365,6 +365,16 @@ public class HomeFragment extends BaseLoadingFragment {
         if (mEtSearch != null) {
             mEtSearch.setText("");
         }
+        if (mSearchView != null) {
+            mSearchView.setQuery("", false);
+            mSearchView.clearFocus();
+            try {
+
+            } catch (Exception e) {
+                mItemSearch.collapseActionView();
+            }
+        }
+
     }
 
 }
